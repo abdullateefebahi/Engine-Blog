@@ -1,0 +1,44 @@
+{
+  "name": "engine-blog",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.1.0",
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@fortawesome/react-fontawesome": "^3.1.1",
+    "@portabletext/react": "^6.0.0",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.22.0",
+    "@supabase/supabase-js": "^2.89.0",
+    "browser-image-compression": "^2.0.2",
+    "gray-matter": "^4.0.3",
+    "ldrs": "^1.1.9",
+    "next": "16.0.10",
+    "next-sanity": "^11.6.12",
+    "nextjs-toploader": "^3.9.17",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "remark": "^15.0.1",
+    "remark-html": "^16.0.1",
+    "sanity": "^4.22.0",
+    "server-only": "^0.0.1",
+    "styled-components": "^6.1.19"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.10",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

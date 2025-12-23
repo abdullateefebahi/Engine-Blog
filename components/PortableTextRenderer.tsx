@@ -1,0 +1,71 @@
+"use client";
+
+import { PortableText } from "@portabletext/react";
+import { urlFor } from "@/sanity/lib/image";
+import Image from "next/image";
+
+export default function PortableTextRenderer({ value }: { value: any }) {
+    return (
+        <PortableText
+            value={value}
+            components={{
+                block: {
+                    h1: ({ children }) => (
+                        <h1 className="text-3xl font-bold my-6">{children}</h1>
+                    ),
+                    h2: ({ children }) => (
+                        <h2 className="text-2xl font-semibold my-5">{children}</h2>
+                    ),
+                    h3: ({ children }) => (
+                        <h3 className="text-xl font-semibold my-4">{children}</h3>
+                    ),
+                    normal: ({ children }) => (
+                        <p className="text-gray-700 dark:text-gray-300 leading-7 my-4">
+                            {children}
+                        </p>
+                    ),
+                },
+                list: {
+                    bullet: ({ children }) => (
+                        <ul className="list-disc ml-6 my-4">{children}</ul>
+                    ),
+                    number: ({ children }) => (
+                        <ol className="list-decimal ml-6 my-4">{children}</ol>
+                    ),
+                },
+                marks: {
+                    link: ({ value, children }) => (
+                        <a
+                            href={value?.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline text-lg"
+                        >
+                            {children}
+                        </a>
+                    ),
+                },
+                types: {
+                    image: ({ value }: { value: any }) => {
+                        return (
+                            <div className="my-10">
+                                <Image
+                                    src={urlFor(value).url()}
+                                    alt={value.alt || "Blog image"}
+                                    width={600}
+                                    height={600}
+                                    className="rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300"
+                                />
+                                {value.caption && (
+                                    <p className="text-center text-gray-500 mt-4 text-sm italic">
+                                        {value.caption}
+                                    </p>
+                                )}
+                            </div>
+                        );
+                    },
+                },
+            }}
+        />
+    );
+}
