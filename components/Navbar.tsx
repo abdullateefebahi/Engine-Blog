@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import icon from "@/public/icon.png";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { logAnalyticsEvent } from "@/lib/firebase";
 import { faHome, faCalendarDays, faLayerGroup, faBell, faInfoCircle, faCalendarDay, faSignOut, faSignIn } from "@fortawesome/free-solid-svg-icons";
 
 export default function Navbar() {
@@ -48,6 +49,7 @@ export default function Navbar() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    logAnalyticsEvent('sign_out');
     router.push("/");
   };
 

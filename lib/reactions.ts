@@ -63,7 +63,6 @@ export async function removeReaction({
     userId: string;
     reaction: string;
 }) {
-    console.log("Attempting to remove reaction:", { postSlug, userId, reaction });
     const { data, error } = await supabase
         .from("reactions")
         .delete()
@@ -80,7 +79,7 @@ export async function removeReaction({
             hint: error.hint
         });
     } else {
-        console.log("Reactions removed successfully:", data);
+        //console.log("Reactions removed successfully:", data);
     }
 
     return { data, error };

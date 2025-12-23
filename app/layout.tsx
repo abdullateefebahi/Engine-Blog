@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import FirebaseAnalytics from "@/components/FirebaseAnalytics";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LoaderRegistrar from "@/components/LoaderRegistrar";
@@ -65,6 +66,7 @@ export default function RootLayout({
           shadow="0 0 10px #2563eb,0 0 5px #2563eb"
         />
         <LoaderRegistrar />
+        <FirebaseAnalytics />
         <Navbar />
         {children}
         <Footer />

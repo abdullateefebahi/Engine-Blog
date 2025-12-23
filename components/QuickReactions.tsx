@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { addReaction, removeReaction, getReactions, Reaction } from "@/lib/reactions";
 import { supabase } from "@/lib/supabase";
+import { logAnalyticsEvent } from "@/lib/firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 
@@ -91,13 +92,16 @@ export default function QuickReactions({ postSlug }: { postSlug: string }) {
         try {
             if (existing) {
                 await removeReaction({ postSlug, userId: sessionUserId, reaction: emoji });
+                logAnalyticsEvent('reaction_removed', { post_slug: postSlug, reaction: emoji });
             } else {
                 // If user had a different reaction, remove it first (implicit in FB style)
                 const otherReaction = reactions.find(r => r.user_id === sessionUserId && r.reaction !== emoji);
                 if (otherReaction) {
                     await removeReaction({ postSlug, userId: sessionUserId, reaction: otherReaction.reaction });
+                    logAnalyticsEvent('reaction_changed', { post_slug: postSlug, old_reaction: otherReaction.reaction, new_reaction: emoji });
                 }
                 await addReaction({ postSlug, userId: sessionUserId, reaction: emoji });
+                logAnalyticsEvent('reaction_added', { post_slug: postSlug, reaction: emoji });
             }
         } catch (error) {
             console.error("Failed to update reaction:", error);

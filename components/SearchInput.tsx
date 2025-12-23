@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { logAnalyticsEvent } from "@/lib/firebase";
 
 export default function SearchInput() {
     const router = useRouter();
@@ -17,6 +18,7 @@ export default function SearchInput() {
         const params = new URLSearchParams(searchParams.toString());
         if (query) {
             params.set("q", query);
+            logAnalyticsEvent('search', { search_term: query });
         } else {
             params.delete("q");
         }
