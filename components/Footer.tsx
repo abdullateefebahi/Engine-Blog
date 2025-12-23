@@ -50,7 +50,9 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-
+        <div className="py-6 flex">
+          <ThemeToggle />
+        </div>
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-gray-100 dark:border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
@@ -60,9 +62,6 @@ export default function Footer() {
             <a href="https://www.tiktok.com/@mechatrons.2.4.0" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors font-bold uppercase tracking-widest">MTE240</a>
             <a href="https://ohiocodespace.vercel.app" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors font-bold uppercase tracking-widest">Ohio Codespace</a>
             <a href="https://github.com/Ghosty-s-Lab-Inc" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors font-bold uppercase tracking-widest">Ghosty's Lab Technology</a>
-            <div className="pl-6 border-l border-gray-100 dark:border-gray-800">
-              <ThemeToggle />
-            </div>
           </div>
         </div>
       </div>
