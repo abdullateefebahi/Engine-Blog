@@ -269,7 +269,7 @@ Perfect for UNIBEN:
 
 * ⚠️ Exam schedule
 * 🧪 Lab timetable
-* 🏗 Faculty announcements
+* 🏗 Faculty announcements.
 * 📢 Urgent updates
 
 This makes your blog **more useful than UNIBEN Blog** 
