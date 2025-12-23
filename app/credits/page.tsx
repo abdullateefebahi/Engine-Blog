@@ -14,8 +14,49 @@ export const metadata: Metadata = {
 
 export default function CreditsPage() {
     return (
-        <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-20 px-4">
-            <div className="max-w-5xl mx-auto">
+        <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-20 px-4 relative overflow-hidden">
+            {/* Background Decorations */}
+            <div className="absolute top-10 left-10 p-8 opacity-5 pointer-events-none animate-float">
+                <Image src={icon} alt="Logo" width={200} height={200} className="animate-blur-flux" style={{ animationDelay: '0s' }} />
+            </div>
+            <div className="absolute bottom-20 right-10 p-8 opacity-5 pointer-events-none rotate-12 animate-drift">
+                <Image src={icon} alt="Logo" width={300} height={300} className="animate-blur-flux" style={{ animationDelay: '2s' }} />
+            </div>
+            <div className="absolute top-1/2 -left-20 p-8 opacity-5 pointer-events-none -rotate-45 animate-spin-slow">
+                <Image src={icon} alt="Logo" width={400} height={400} className="animate-blur-flux" style={{ animationDelay: '4s' }} />
+            </div>
+            <div className="absolute top-40 right-20 p-8 opacity-[0.03] pointer-events-none rotate-180 animate-float">
+                <Image src={icon} alt="Logo" width={150} height={150} className="animate-blur-flux" style={{ animationDelay: '1.5s' }} />
+            </div>
+            {/* Additional Decorations */}
+            <div className="absolute bottom-1/3 left-10 p-8 opacity-[0.04] pointer-events-none rotate-90 animate-spin-reverse-slow">
+                <Image src={icon} alt="Logo" width={250} height={250} className="animate-blur-flux" style={{ animationDelay: '5s' }} />
+            </div>
+            <div className="absolute top-20 left-1/2 p-8 opacity-[0.02] pointer-events-none -rotate-12 translate-x-20 animate-drift">
+                <Image src={icon} alt="Logo" width={180} height={180} />
+            </div>
+            <div className="absolute bottom-10 left-1/3 p-8 opacity-[0.03] pointer-events-none rotate-45 animate-pulse-slow">
+                <Image src={icon} alt="Logo" width={120} height={120} className="animate-blur-flux" style={{ animationDelay: '3s' }} />
+            </div>
+            <div className="absolute top-1/3 right-10 p-8 opacity-[0.04] pointer-events-none -rotate-90 animate-float">
+                <Image src={icon} alt="Logo" width={220} height={220} />
+            </div>
+
+            {/* Even More Decorations */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-[0.015] pointer-events-none z-0 animate-spin-slow">
+                <Image src={icon} alt="Logo" width={800} height={800} className="animate-blur-flux" style={{ animationDelay: '6s' }} />
+            </div>
+            <div className="absolute top-5 left-1/4 opacity-[0.03] pointer-events-none rotate-45 animate-float">
+                <Image src={icon} alt="Logo" width={60} height={60} className="animate-blur-flux" style={{ animationDelay: '0.5s' }} />
+            </div>
+            <div className="absolute bottom-5 right-1/4 opacity-[0.03] pointer-events-none -rotate-45 animate-drift">
+                <Image src={icon} alt="Logo" width={80} height={80} className="animate-blur-flux" style={{ animationDelay: '2.5s' }} />
+            </div>
+            <div className="absolute top-1/4 right-5 opacity-[0.04] pointer-events-none rotate-12 animate-spin-slow">
+                <Image src={icon} alt="Logo" width={100} height={100} />
+            </div>
+
+            <div className="max-w-5xl mx-auto relative z-10">
                 {/* Breadcrumb */}
                 <nav className="mb-12 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                     <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
