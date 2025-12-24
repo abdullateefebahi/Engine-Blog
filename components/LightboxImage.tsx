@@ -40,24 +40,26 @@ export default function LightboxImage({
                 onClick={() => setIsOpen(true)}
             >
                 {showBlurBackground && (
-                    <div className="absolute inset-0 -z-10">
+                    <div className="absolute inset-0 z-0">
                         <Image
                             src={src}
                             alt=""
                             fill
-                            className="object-cover blur-3xl opacity-80 scale-125"
+                            className="object-cover blur-3xl opacity-100 scale-125"
                             priority
                         />
                     </div>
                 )}
-                <Image
-                    src={src}
-                    alt={alt}
-                    width={width}
-                    height={height}
-                    fill={!width && !height}
-                    className={`${showBlurBackground ? 'object-contain' : 'object-cover'} transition-transform duration-500 group-hover:scale-[1.02]`}
-                />
+                <div className="relative w-full h-full z-10">
+                    <Image
+                        src={src}
+                        alt={alt}
+                        width={width}
+                        height={height}
+                        fill={!width && !height}
+                        className={`${showBlurBackground ? 'object-contain' : 'object-cover'} transition-transform duration-500 group-hover:scale-[1.02]`}
+                    />
+                </div>
             </div>
 
             {isOpen && (

@@ -50,7 +50,7 @@ export default async function EventsPage() {
                                                 src={event.coverImage}
                                                 alt=""
                                                 fill
-                                                className="object-cover blur-3xl opacity-70 scale-125"
+                                                className="object-cover blur-3xl opacity-100 scale-125"
                                             />
                                         </div>
                                         {/* Primary Image */}
