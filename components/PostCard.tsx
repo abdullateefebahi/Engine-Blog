@@ -30,14 +30,27 @@ export default function PostCard({ post }: any) {
   return (
     <div className="group relative flex flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 overflow-hidden h-full">
       {post.coverImage && (
-        <div className="relative aspect-video w-full overflow-hidden">
-          <Image
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+        <div className="relative aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-900">
+          {/* Blurred Background */}
+          <div className="absolute inset-0">
+            <Image
+              src={post.coverImage}
+              alt=""
+              fill
+              className="object-cover blur-3xl opacity-80 scale-125"
+              priority={false}
+            />
+          </div>
+          {/* Primary Image */}
+          <div className="relative w-full h-full">
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              className="object-contain transition-transform duration-500 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
         </div>
       )}
 

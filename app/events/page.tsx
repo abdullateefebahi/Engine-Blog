@@ -43,15 +43,27 @@ export default async function EventsPage() {
                                 className="group bg-white dark:bg-gray-800 rounded-[2.5rem] overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
                             >
                                 {event.coverImage && (
-                                    <div className="relative h-64 w-full overflow-hidden">
-                                        <Image
-                                            src={event.coverImage}
-                                            alt={event.title}
-                                            fill
-                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent" />
-                                        <div className="absolute bottom-6 left-6">
+                                    <div className="relative h-64 w-full overflow-hidden bg-gray-100 dark:bg-gray-900">
+                                        {/* Blurred Background */}
+                                        <div className="absolute inset-0">
+                                            <Image
+                                                src={event.coverImage}
+                                                alt=""
+                                                fill
+                                                className="object-cover blur-3xl opacity-70 scale-125"
+                                            />
+                                        </div>
+                                        {/* Primary Image */}
+                                        <div className="relative w-full h-full">
+                                            <Image
+                                                src={event.coverImage}
+                                                alt={event.title}
+                                                fill
+                                                className="object-contain transition-transform duration-700 group-hover:scale-105"
+                                            />
+                                        </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent pointer-events-none" />
+                                        <div className="absolute bottom-6 left-6 z-10">
                                             <span className="px-3 py-1 bg-blue-600 text-white text-[10px] font-bold rounded-full uppercase tracking-widest">
                                                 {event.categories?.[0] || "Event"}
                                             </span>

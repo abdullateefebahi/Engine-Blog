@@ -3,6 +3,7 @@
 import { PortableText } from "@portabletext/react";
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
+import LightboxImage from "./LightboxImage";
 
 export default function PortableTextRenderer({ value }: { value: any }) {
     return (
@@ -49,12 +50,12 @@ export default function PortableTextRenderer({ value }: { value: any }) {
                     image: ({ value }: { value: any }) => {
                         return (
                             <div className="my-10">
-                                <Image
+                                <LightboxImage
                                     src={urlFor(value).url()}
                                     alt={value.alt || "Blog image"}
-                                    width={600}
-                                    height={600}
-                                    className="rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300"
+                                    width={800} // Increased for better detail
+                                    height={500}
+                                    className="rounded-xl shadow-lg border border-gray-100 dark:border-gray-800"
                                 />
                                 {value.caption && (
                                     <p className="text-center text-gray-500 mt-4 text-sm italic">

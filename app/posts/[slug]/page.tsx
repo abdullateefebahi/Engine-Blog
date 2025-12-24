@@ -10,6 +10,7 @@ import PortableTextRenderer from "@/components/PortableTextRenderer";
 import ShareButtons from "@/components/ShareButtons";
 import CommentsSection from "@/components/Comments";
 import Reactions from "@/components/Reactions";
+import LightboxImage from "@/components/LightboxImage";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -81,15 +82,12 @@ export default async function PostPage(props: {
   return (
     <article className="max-w-3xl mx-auto px-4 py-12">
       {post.coverImage && (
-        <div className="mb-8 relative w-full h-[400px] rounded-lg overflow-hidden">
-          <Image
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
+        <LightboxImage
+          src={post.coverImage}
+          alt={post.title}
+          className="mb-8 w-full h-[400px] rounded-lg bg-transparent dark:bg-transparent border border-gray-100 dark:border-gray-800"
+          showBlurBackground={true}
+        />
       )}
       <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
       <div className="flex flex-wrap items-center gap-2 mb-8">
