@@ -72,6 +72,7 @@ export default function QuickReactions({ postSlug }: { postSlug: string }) {
                 post_slug: postSlug,
                 user_id: sessionUserId,
                 reaction: emoji,
+                comment_id: null,
                 created_at: new Date().toISOString()
             });
         }
