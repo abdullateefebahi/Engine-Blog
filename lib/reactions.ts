@@ -3,6 +3,7 @@ import { supabase } from "./supabase";
 export type Reaction = {
     id: number;
     post_slug: string;
+    comment_id: number | null;
     user_id: string | null;
     reaction: string;
     created_at: string;
@@ -28,16 +29,19 @@ export async function addReaction({
     postSlug,
     userId = null,
     reaction,
+    commentId = null,
 }: {
     postSlug: string;
     userId?: string | null;
     reaction: string;
+    commentId?: number | null;
 }) {
     const { data, error } = await supabase.from("reactions").insert([
         {
             post_slug: postSlug,
             user_id: userId,
             reaction,
+            comment_id: commentId,
         },
     ]);
 

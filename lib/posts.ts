@@ -21,7 +21,10 @@ export async function getAllPosts() {
       publishedAt,
       excerpt,
       body,
-      "author": author->name
+      "author": author->name,
+      "authorImage": author->image.asset->url,
+      "authorSlug": author->slug.current,
+      "authorBio": author->bio
     }
   `);
 }
@@ -38,7 +41,10 @@ export async function getPostsByCategory(category: string) {
       publishedAt,
       excerpt,
       body,
-      "author": author->name
+      "author": author->name,
+      "authorImage": author->image.asset->url,
+      "authorSlug": author->slug.current,
+      "authorBio": author->bio
     }
   `,
     { category }
@@ -56,7 +62,10 @@ export async function getPost(slug: string) {
       publishedAt,
       excerpt,
       body,
-      "author": author->name
+      "author": author->name,
+      "authorImage": author->image.asset->url,
+      "authorSlug": author->slug.current,
+      "authorBio": author->bio
     }
   `,
     { slug }
@@ -74,9 +83,53 @@ export async function searchPosts(query: string) {
       publishedAt,
       excerpt,
       body,
-      "author": author->name
+      "author": author->name,
+      "authorImage": author->image.asset->url,
+      "authorSlug": author->slug.current,
+      "authorBio": author->bio
     }`,
     { q: `*${query}*` }
   );
 }
 
+export async function getAuthorBySlug(slug: string) {
+  return client.fetch(
+    `*[_type == "author" && slug.current == $slug][0] {
+      _id,
+      name,
+      "slug": slug.current,
+      "image": image.asset->url,
+      bio
+    }`,
+    { slug }
+  );
+}
+
+export async function getPostsByAuthor(slug: string) {
+  return client.fetch(
+    `*[_type == "post" && author->slug.current == $slug] | order(publishedAt desc) {
+      _id,
+      title,
+      "slug": slug.current,
+      "categories": categories[]->title,
+      "coverImage": mainImage.asset->url,
+      publishedAt,
+      excerpt,
+      body,
+      "author": author->name,
+      "authorImage": author->image.asset->url,
+      "authorSlug": author->slug.current
+    }`,
+    { slug }
+  );
+}
+
+export async function getAllAuthors() {
+  return client.fetch(`
+    *[_type == "author"] {
+      _id,
+      name,
+      "slug": slug.current
+    }
+  `);
+}

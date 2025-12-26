@@ -18,12 +18,12 @@ export default function Reactions({ postSlug }: { postSlug: string }) {
                 setSessionUserId(user.id);
             } else {
                 // 2. Fallback to anonymous ID
-                let anonId = sessionStorage.getItem("anonUserId");
-                if (!anonId) {
-                    anonId = crypto.randomUUID?.() || Math.random().toString(36).substring(2);
-                    sessionStorage.setItem("anonUserId", anonId);
+                let gid = localStorage.getItem("guestId");
+                if (!gid) {
+                    gid = `guest_${Math.random().toString(36).substring(2, 11)}`;
+                    localStorage.setItem("guestId", gid);
                 }
-                setSessionUserId(anonId);
+                setSessionUserId(gid);
             }
             fetchReactions();
         };
@@ -53,6 +53,7 @@ export default function Reactions({ postSlug }: { postSlug: string }) {
             const tempReaction: Reaction = {
                 id: Math.random(),
                 post_slug: postSlug,
+                comment_id: null,
                 user_id: sessionUserId,
                 reaction: emoji,
                 created_at: new Date().toISOString()
@@ -64,12 +65,14 @@ export default function Reactions({ postSlug }: { postSlug: string }) {
             if (existing) {
                 await removeReactionAction({
                     postSlug,
-                    reaction: emoji
+                    reaction: emoji,
+                    guestId: user ? null : sessionUserId
                 });
             } else {
                 await addReactionAction({
                     postSlug,
-                    reaction: emoji
+                    reaction: emoji,
+                    guestId: user ? null : sessionUserId
                 });
             }
         } catch (error) {

@@ -85,6 +85,25 @@ engine-blog/
 └── ...
 ```
 
+---
+
+## 🛠️ Sanity Webhooks
+
+To ensure that reactions and comments are cleaned up in Supabase when a post is deleted in Sanity, you must set up a webhook:
+
+1.  Go to your [Sanity Management Dashboard](https://www.sanity.io/manage).
+2.  Navigate to **API** > **Webhooks**.
+3.  Click **Create Webhook**.
+4.  **Name**: Deletion Cleanup
+5.  **URL**: `https://your-domain.com/api/webhooks/sanity`
+6.  **Dataset**: Your active dataset (e.g., `production`).
+7.  **Trigger on**: `Deleted`.
+8.  **Filter**: `_type == "post"`.
+9.  **Projection**: `{ "slug": slug.current, "type": _type }`.
+10. **HTTP Method**: `POST`.
+
+---
+
 ## 🤝 Contribution Guidelines
 
 *   **Verify Info**: Always verify news before pushing content.

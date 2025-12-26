@@ -1,6 +1,7 @@
 export const dynamic = "force-static";
 
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { Metadata } from "next";
 import { getAllPosts, getPost } from "@/lib/posts";
 import { remark } from "remark";
@@ -97,18 +98,64 @@ export default async function PostPage(props: {
 
         <div className="flex flex-wrap items-center gap-4 mb-10 pb-8 border-b border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-3">
-            {post.author && (
-              <span className="text-sm font-bold text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full uppercase tracking-widest text-[10px]">
-                {post.author}
-              </span>
+            {post.authorSlug ? (
+              <Link href={`/authors/${post.authorSlug}`} className="flex items-center gap-3 group/author transition-all">
+                {post.authorImage && (
+                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm transition-transform group-hover/author:scale-110 group-hover/author:shadow-md">
+                    <Image
+                      src={post.authorImage}
+                      alt={post.author}
+                      width={40}
+                      height={40}
+                      className="object-cover h-full w-full"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-col">
+                  {post.author && (
+                    <span className="text-sm font-bold text-gray-900 dark:text-gray-100 px-2 py-0.5 rounded-lg bg-gray-50 dark:bg-gray-800/50 w-fit group-hover/author:bg-blue-50 dark:group-hover/author:bg-blue-900/30 group-hover/author:text-blue-600 dark:group-hover/author:text-blue-400 transition-colors">
+                      {post.author}
+                    </span>
+                  )}
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-0.5">
+                    {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
+              </Link>
+            ) : (
+              /* Fallback if no slug */
+              <div className="flex items-center gap-3">
+                {post.authorImage && (
+                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm">
+                    <Image
+                      src={post.authorImage}
+                      alt={post.author}
+                      width={40}
+                      height={40}
+                      className="object-cover h-full w-full"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-col">
+                  {post.author && (
+                    <span className="text-sm font-bold text-gray-900 dark:text-gray-100 px-2 py-0.5 rounded-lg bg-gray-50 dark:bg-gray-800/50 w-fit">
+                      {post.author}
+                    </span>
+                  )}
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-0.5">
+                    {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
+              </div>
             )}
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-              {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
           </div>
 
           <div className="flex flex-wrap gap-2">

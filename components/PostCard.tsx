@@ -78,10 +78,25 @@ export default function PostCard({ post }: any) {
             })}
           </span>
           {post.author && (
-            <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center ml-2">
-              <FontAwesomeIcon icon={faUser} size="lg" className="mr-2 text-blue-800 dark:text-blue-400" />
-              {post.author}
-            </span>
+            <Link
+              href={`/authors/${post.authorSlug}`}
+              className="relative z-10 text-xs text-gray-500 dark:text-gray-400 flex items-center ml-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              {post.authorImage ? (
+                <div className="w-6 h-6 rounded-full overflow-hidden mr-2 border border-gray-200 dark:border-gray-700 shadow-sm transition-transform group-hover/author:scale-110">
+                  <Image
+                    src={post.authorImage}
+                    alt={post.author}
+                    width={24}
+                    height={24}
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <FontAwesomeIcon icon={faUser} size="lg" className="mr-2 text-blue-800 dark:text-blue-400" />
+              )}
+              <span className="font-medium">{post.author}</span>
+            </Link>
           )}
 
 

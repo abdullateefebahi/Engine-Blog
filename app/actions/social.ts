@@ -9,27 +9,26 @@ export async function addCommentAction({
     userName,
     userAvatar,
     comment,
+    parentId = null,
 }: {
     postSlug: string;
     userName: string;
     userAvatar: string | null;
     comment: string;
+    parentId?: number | null;
 }) {
     const { userId } = await auth();
-    console.log("Server Action: addCommentAction called. UserID:", userId);
+    const effectiveUserId = userId || "guest";
+    console.log("Server Action: addCommentAction called. effectiveUserId:", effectiveUserId);
 
-    if (!userId) {
-        console.error("Server Action: No userId found.");
-        throw new Error("Unauthorized");
-    }
-
-    console.log("Server Action: Attempting insert to 'comments' table for:", { postSlug, userName });
+    console.log("Server Action: Attempting insert to 'comments' table for:", { postSlug, userName, parentId });
 
     const { data, error } = await supabaseAdmin.from("comments").insert([
         {
             post_slug: postSlug,
+            parent_id: parentId,
             user_name: userName,
-            user_id: userId,
+            user_id: effectiveUserId,
             user_avatar: userAvatar,
             comment,
             is_approved: true, // Auto-approve for verified users
@@ -48,33 +47,23 @@ export async function addCommentAction({
 export async function addReactionAction({
     postSlug,
     reaction,
+    guestId,
 }: {
     postSlug: string;
     reaction: string;
+    guestId?: string | null;
 }) {
     const { userId } = await auth();
-    // Allow reaction even if not logged in? Current UI logic allows it via anonymity,
-    // but without auth() we can't reliably get stable ID unless passed from client.
-    // For now, let's enforce Auth for consistent behavior, OR rely on client passing ID
-    // if we trust it (less secure).
-    // Given the previous code tried to use "anonUserId" from session storage,
-    // we should ideally allow anon reactions if that's the desired feature.
-    // BUT, `auth().userId` is null for anon.
+    const finalUserId = userId || guestId;
 
-    // Let's stick to AUTHENTICATED users for now to prevent spam, unless requested pattern changes.
-    // The previous code had a fallback for anonymous ID.
-    // To support anonymous reactions securely, we'd need to trust the client-provided ID
-    // or generate a session based one.
-
-    // DECISION: Enforce Auth for now as it's cleaner with Clerk.
-    if (!userId) {
+    if (!finalUserId) {
         throw new Error("Unauthorized");
     }
 
     const { data, error } = await supabaseAdmin.from("reactions").insert([
         {
             post_slug: postSlug,
-            user_id: userId,
+            user_id: finalUserId,
             reaction,
         },
     ]);
@@ -90,13 +79,16 @@ export async function addReactionAction({
 export async function removeReactionAction({
     postSlug,
     reaction,
+    guestId,
 }: {
     postSlug: string;
     reaction: string;
+    guestId?: string | null;
 }) {
     const { userId } = await auth();
+    const finalUserId = userId || guestId;
 
-    if (!userId) {
+    if (!finalUserId) {
         throw new Error("Unauthorized");
     }
 
@@ -104,7 +96,7 @@ export async function removeReactionAction({
         .from("reactions")
         .delete()
         .eq("post_slug", postSlug)
-        .eq("user_id", userId)
+        .eq("user_id", finalUserId)
         .eq("reaction", reaction)
         .select();
 
@@ -141,4 +133,57 @@ export async function deleteCommentAction(commentId: number) {
     }
 
     return data;
+}
+export async function toggleReactionAction({
+    postSlug,
+    reaction,
+    commentId = null,
+    guestId,
+}: {
+    postSlug: string;
+    reaction: string;
+    commentId?: number | null;
+    guestId?: string | null;
+}) {
+    const { userId } = await auth();
+    const finalUserId = userId || guestId;
+
+    if (!finalUserId) {
+        throw new Error("Unauthorized: Login or guest ID required");
+    }
+
+    // Check if reaction already exists
+    const query = supabaseAdmin
+        .from("reactions")
+        .select("*")
+        .eq("user_id", finalUserId)
+        .eq("reaction", reaction);
+
+    if (commentId) {
+        query.eq("comment_id", commentId);
+    } else {
+        query.eq("post_slug", postSlug).is("comment_id", null);
+    }
+
+    const { data: existing } = await query;
+
+    if (existing && existing.length > 0) {
+        // Remove reaction
+        await supabaseAdmin
+            .from("reactions")
+            .delete()
+            .eq("id", existing[0].id);
+        return { action: "removed" };
+    } else {
+        // Add reaction
+        await supabaseAdmin.from("reactions").insert([
+            {
+                post_slug: postSlug,
+                user_id: finalUserId,
+                reaction,
+                comment_id: commentId,
+            },
+        ]);
+        return { action: "added" };
+    }
 }

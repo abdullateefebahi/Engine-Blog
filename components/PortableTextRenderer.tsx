@@ -6,9 +6,19 @@ import Image from "next/image";
 import LightboxImage from "./LightboxImage";
 
 export default function PortableTextRenderer({ value }: { value: any }) {
+    if (!value) return null;
+
+    // Normalize value into an array of valid block objects
+    const rawBlocks = Array.isArray(value) ? value : [value];
+    const blocks = rawBlocks.filter(block =>
+        block && typeof block === 'object' && '_type' in block
+    );
+
+    if (blocks.length === 0) return null;
+
     return (
         <PortableText
-            value={value}
+            value={blocks}
             components={{
                 block: {
                     h1: ({ children }) => (
