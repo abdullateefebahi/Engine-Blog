@@ -29,12 +29,10 @@ export default function QuickReactions({ postSlug }: { postSlug: string }) {
             if (user) {
                 setSessionUserId(user.id);
             } else {
-                let anonId = sessionStorage.getItem("anonUserId");
+                let anonId = localStorage.getItem("guestId");
                 if (!anonId) {
-                    anonId = typeof crypto !== "undefined" && crypto.randomUUID
-                        ? crypto.randomUUID()
-                        : 'anon-' + Math.random().toString(36).substring(2, 11);
-                    sessionStorage.setItem("anonUserId", anonId);
+                    anonId = `guest_${Math.random().toString(36).substring(2, 11)}`;
+                    localStorage.setItem("guestId", anonId);
                 }
                 setSessionUserId(anonId);
             }
@@ -81,16 +79,28 @@ export default function QuickReactions({ postSlug }: { postSlug: string }) {
 
         try {
             if (existing) {
-                await removeReactionAction({ postSlug, reaction: emoji });
+                await removeReactionAction({
+                    postSlug,
+                    reaction: emoji,
+                    guestId: user ? null : sessionUserId
+                });
                 logAnalyticsEvent('reaction_removed', { post_slug: postSlug, reaction: emoji });
             } else {
                 // If user had a different reaction, remove it first (implicit in FB style)
                 const otherReaction = reactions.find(r => r.user_id === sessionUserId && r.reaction !== emoji);
                 if (otherReaction) {
-                    await removeReactionAction({ postSlug, reaction: otherReaction.reaction });
+                    await removeReactionAction({
+                        postSlug,
+                        reaction: otherReaction.reaction,
+                        guestId: user ? null : sessionUserId
+                    });
                     logAnalyticsEvent('reaction_changed', { post_slug: postSlug, old_reaction: otherReaction.reaction, new_reaction: emoji });
                 }
-                await addReactionAction({ postSlug, reaction: emoji });
+                await addReactionAction({
+                    postSlug,
+                    reaction: emoji,
+                    guestId: user ? null : sessionUserId
+                });
                 logAnalyticsEvent('reaction_added', { post_slug: postSlug, reaction: emoji });
             }
         } catch (error) {

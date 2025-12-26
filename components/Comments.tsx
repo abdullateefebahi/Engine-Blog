@@ -118,6 +118,7 @@ export default function CommentsSection({ postSlug }: { postSlug: string }) {
                         comment={c}
                         allComments={comments}
                         user={user}
+                        guestId={guestId}
                         depth={depth}
                         replyingTo={replyingTo}
                         handleReply={handleReply}
@@ -186,6 +187,7 @@ function CommentThread({
     comment: Comment,
     allComments: Comment[],
     user: any,
+    guestId: string | null,
     depth: number,
     replyingTo: number | null,
     handleReply: (commentId: number) => void,
@@ -203,6 +205,7 @@ function CommentThread({
             <CommentCard
                 comment={comment}
                 user={user}
+                guestId={guestId}
                 parentUserName={parent?.user_name}
                 onReply={() => handleReply(comment.id)}
                 replyCount={replies.length}
@@ -242,6 +245,7 @@ function CommentThread({
                             comment={reply}
                             allComments={allComments}
                             user={user}
+                            guestId={guestId}
                             depth={depth + 1}
                             replyingTo={replyingTo}
                             handleReply={handleReply}
@@ -270,6 +274,7 @@ function CommentCard({
 }: {
     comment: Comment,
     user: any,
+    guestId: string | null,
     parentUserName?: string,
     onReply: () => void,
     replyCount?: number,
@@ -279,7 +284,7 @@ function CommentCard({
     onDelete: () => Promise<void>,
 }) {
     const [showBreakdown, setShowBreakdown] = useState(false);
-    const emojis = ["❤️", "👍", "🔥", "😂"];
+    const emojis = ["❤️", "😂", "😢", "😠"];
 
     const reactionStats = (comment.reactions || []).reduce((acc, r) => {
         acc.total++;
@@ -371,7 +376,8 @@ function CommentCard({
                                     <div className="flex items-center gap-1 flex-wrap animate-in fade-in slide-in-from-left-2 duration-300">
                                         {emojis.map(emoji => {
                                             const count = (comment.reactions || []).filter(r => r.reaction === emoji).length;
-                                            const hasReacted = user && (comment.reactions || []).some(r => r.user_id === user.id && r.reaction === emoji);
+                                            const activeId = user?.id || guestId;
+                                            const hasReacted = activeId && (comment.reactions || []).some(r => r.user_id === activeId && r.reaction === emoji);
 
                                             if (count === 0) return null;
 
@@ -430,7 +436,8 @@ function CommentCard({
                             {/* Hover Tray */}
                             <div className="absolute left-0 bottom-full mb-2 flex items-center gap-1 bg-white dark:bg-gray-800 p-1.5 rounded-full shadow-2xl border border-gray-100 dark:border-gray-700 opacity-0 invisible group-hover/reactions:opacity-100 group-hover/reactions:visible transition-all translate-y-2 group-hover/reactions:translate-y-0 z-20">
                                 {emojis.map(emoji => {
-                                    const hasReacted = user && (comment.reactions || []).some(r => r.user_id === user.id && r.reaction === emoji);
+                                    const activeId = user?.id || guestId;
+                                    const hasReacted = activeId && (comment.reactions || []).some(r => r.user_id === activeId && r.reaction === emoji);
                                     return (
                                         <button
                                             key={emoji}
