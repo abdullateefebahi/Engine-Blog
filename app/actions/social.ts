@@ -66,13 +66,14 @@ export async function addReactionAction({
             user_id: finalUserId,
             reaction,
         },
-    ]);
+    ]).select();
 
     if (error) {
         console.error("Error adding reaction:", error);
-        return null;
+        throw new Error("Failed to add reaction");
     }
 
+    revalidatePath(`/posts/${postSlug}`);
     return data;
 }
 
@@ -102,9 +103,10 @@ export async function removeReactionAction({
 
     if (error) {
         console.error("Error removing reaction:", error);
-        return null; // Don't throw, just return null so UI can handle
+        throw new Error("Failed to remove reaction");
     }
 
+    revalidatePath(`/posts/${postSlug}`);
     return data;
 }
 
@@ -153,30 +155,41 @@ export async function toggleReactionAction({
     }
 
     // Check if reaction already exists
-    const query = supabaseAdmin
+    let query = supabaseAdmin
         .from("reactions")
         .select("*")
         .eq("user_id", finalUserId)
         .eq("reaction", reaction);
 
     if (commentId) {
-        query.eq("comment_id", commentId);
+        query = query.eq("comment_id", commentId);
     } else {
-        query.eq("post_slug", postSlug).is("comment_id", null);
+        query = query.eq("post_slug", postSlug).is("comment_id", null);
     }
 
-    const { data: existing } = await query;
+    const { data: existing, error: queryError } = await query;
+
+    if (queryError) {
+        console.error("toggleReactionAction: Query error", queryError);
+        throw new Error("Failed to check existing reaction");
+    }
 
     if (existing && existing.length > 0) {
         // Remove reaction
-        await supabaseAdmin
+        const { error: deleteError } = await supabaseAdmin
             .from("reactions")
             .delete()
             .eq("id", existing[0].id);
+
+        if (deleteError) {
+            console.error("toggleReactionAction: Delete error", deleteError);
+            throw new Error("Failed to remove reaction");
+        }
+        revalidatePath(`/posts/${postSlug}`);
         return { action: "removed" };
     } else {
         // Add reaction
-        await supabaseAdmin.from("reactions").insert([
+        const { error: insertError } = await supabaseAdmin.from("reactions").insert([
             {
                 post_slug: postSlug,
                 user_id: finalUserId,
@@ -184,6 +197,12 @@ export async function toggleReactionAction({
                 comment_id: commentId,
             },
         ]);
+
+        if (insertError) {
+            console.error("toggleReactionAction: Insert error", insertError);
+            throw new Error("Failed to add reaction");
+        }
+        revalidatePath(`/posts/${postSlug}`);
         return { action: "added" };
     }
 }

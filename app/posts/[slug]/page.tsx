@@ -13,6 +13,8 @@ import BookmarkButton from "@/components/BookmarkButton";
 import CommentsSection from "@/components/Comments";
 import Reactions from "@/components/Reactions";
 import LightboxImage from "@/components/LightboxImage";
+import AITools from "@/components/AITools";
+import { portableTextToPlainText } from "@/lib/utils";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -102,6 +104,8 @@ export default async function PostPage(props: {
           </div>
         </div>
 
+
+
         <div className="flex flex-wrap items-center gap-4 mb-10 pb-8 border-b border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-3">
             {post.authorSlug ? (
@@ -173,6 +177,8 @@ export default async function PostPage(props: {
           </div>
         </div>
 
+        <AITools content={portableTextToPlainText(post.body)} showBanner={true} />
+
         <div className="prose-container">
           <PortableTextRenderer value={post.body} />
         </div>
@@ -188,6 +194,7 @@ export default async function PostPage(props: {
 
         <CommentsSection postSlug={post.slug} />
       </article>
+      <AITools content={portableTextToPlainText(post.body)} />
     </main>
   );
 }
