@@ -38,13 +38,15 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
     const [activeType, setActiveType] = useState<"summary" | "explain" | "takeaways" | "ask" | null>(null);
     const [question, setQuestion] = useState("");
     const [isCopied, setIsCopied] = useState(false);
-    const scrollRef = useRef<HTMLDivElement>(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-        }
-    }, [chatHistory, isLoading]);
+        scrollToBottom();
+    }, [chatHistory, isLoading, isOpen]);
 
     const handleCopy = (text: string) => {
         if (!text) return;
@@ -238,8 +240,7 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                                 <div className="space-y-4">
                                     {activeType === "ask" ? (
                                         <div
-                                            ref={scrollRef}
-                                            className="flex flex-col gap-4 scroll-smooth pr-2 custom-scrollbar"
+                                            className="flex flex-col gap-4 pr-2"
                                         >
                                             {chatHistory.map((msg, i) => (
                                                 <div key={i} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
@@ -265,22 +266,24 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                                                 </div>
                                             ))}
                                             {isLoading && (
-                                                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-500 animate-pulse">
+                                                <div className="flex items-center gap-1.5 px-2 py-1">
+                                                    <div className="h-1.5 w-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                                    <div className="h-1.5 w-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                                                     <div className="h-1.5 w-1.5 bg-blue-600 rounded-full animate-bounce"></div>
-                                                    Thinking...
                                                 </div>
                                             )}
+                                            <div ref={messagesEndRef} />
                                         </div>
                                     ) : (
                                         <div className="animate-in fade-in duration-500">
                                             {isLoading ? (
-                                                <div className="flex flex-col items-center justify-center py-12">
-                                                    <div className="h-10 w-10 animate-spin rounded-full border-2 border-blue-600 border-t-transparent shadow-lg shadow-blue-500/20"></div>
-                                                    <p className="mt-4 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
-                                                        {activeType === "summary" ? "Summarizing..." :
-                                                            activeType === "takeaways" ? "Extracting..." :
-                                                                "Generating..."}
-                                                    </p>
+                                                <div className="flex flex-col items-center justify-center py-20">
+                                                    <div className="relative">
+                                                        <div className="h-12 w-12 animate-spin rounded-full border-2 border-blue-600/20 border-t-blue-600 shadow-xl shadow-blue-500/10"></div>
+                                                        <div className="absolute inset-0 flex items-center justify-center">
+                                                            <SparklesSVG className="w-5 h-5 text-blue-500 animate-pulse" />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             ) : result && (
                                                 <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
@@ -330,7 +333,7 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                         </div>
                     </motion.div>
                 )}
-            </AnimatePresence>
+            </AnimatePresence >
         </>
     );
 }
