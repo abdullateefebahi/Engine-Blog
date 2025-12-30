@@ -177,7 +177,12 @@ export default async function PostPage(props: {
           </div>
         </div>
 
-        <AITools content={portableTextToPlainText(post.body)} showBanner={true} />
+        <AITools
+          content={portableTextToPlainText(post.body)}
+          showBanner={true}
+          publishDate={post.publishedAt}
+          authorName={post.author}
+        />
 
         <div className="prose-container">
           <PortableTextRenderer value={post.body} />
@@ -194,7 +199,6 @@ export default async function PostPage(props: {
 
         <CommentsSection postSlug={post.slug} />
       </article>
-      <AITools content={portableTextToPlainText(post.body)} />
     </main>
   );
 }

@@ -20,6 +20,8 @@ import { motion, AnimatePresence } from "framer-motion";
 interface AIToolsProps {
     content: string;
     showBanner?: boolean;
+    publishDate?: string;
+    authorName?: string;
 }
 
 const SparklesSVG = ({ className = "w-5 h-5" }: { className?: string }) => (
@@ -30,7 +32,7 @@ const SparklesSVG = ({ className = "w-5 h-5" }: { className?: string }) => (
     </svg>
 );
 
-export default function AITools({ content, showBanner = false }: AIToolsProps) {
+export default function AITools({ content, showBanner = false, publishDate, authorName }: AIToolsProps) {
     const [result, setResult] = useState<string | null>(null);
     const [chatHistory, setChatHistory] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -38,14 +40,28 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
     const [activeType, setActiveType] = useState<"summary" | "explain" | "takeaways" | "ask" | null>(null);
     const [question, setQuestion] = useState("");
     const [isCopied, setIsCopied] = useState(false);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [isTyping, setIsTyping] = useState(false);
+    const lastMessageRef = useRef<HTMLDivElement>(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const scrollToLatest = () => {
+        if (chatHistory.length > 0) {
+            const lastMsg = chatHistory[chatHistory.length - 1];
+            if (lastMsg.role === "assistant") {
+                // Scroll to the TOP of the new assistant message
+                lastMessageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            } else {
+                // Scroll to the bottom for user messages
+                lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+            }
+        }
     };
 
     useEffect(() => {
-        scrollToBottom();
+        if (isOpen) {
+            // Small delay to ensure the DOM has updated
+            const timeout = setTimeout(scrollToLatest, 100);
+            return () => clearTimeout(timeout);
+        }
     }, [chatHistory, isLoading, isOpen]);
 
     const handleCopy = (text: string) => {
@@ -89,6 +105,8 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                 body: JSON.stringify({
                     content,
                     type,
+                    publishDate,
+                    authorName,
                     question: type === "ask" ? currentQuestion : undefined,
                     history: type === "ask" ? chatHistory : undefined
                 }),
@@ -96,18 +114,52 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
 
             const data = await response.json();
             if (data.text) {
+                const fullText = data.text;
+                const words = fullText.split(" ");
+                let currentIdx = 0;
+                let currentText = "";
+
+                setIsTyping(true);
+                setIsLoading(false);
+
                 if (type === "ask") {
-                    setChatHistory(prev => [...prev, { role: "assistant", content: data.text }]);
+                    // Add empty assistant message placeholder
+                    setChatHistory(prev => [...prev, { role: "assistant", content: "" }]);
+
+                    const timer = setInterval(() => {
+                        if (currentIdx < words.length) {
+                            currentText += (currentIdx === 0 ? "" : " ") + words[currentIdx];
+                            setChatHistory(prev => {
+                                const newHist = [...prev];
+                                newHist[newHist.length - 1].content = currentText;
+                                return newHist;
+                            });
+                            currentIdx++;
+                        } else {
+                            clearInterval(timer);
+                            setIsTyping(false);
+                        }
+                    }, 30);
                 } else {
-                    setResult(data.text);
+                    setResult("");
+                    const timer = setInterval(() => {
+                        if (currentIdx < words.length) {
+                            currentText += (currentIdx === 0 ? "" : " ") + words[currentIdx];
+                            setResult(currentText);
+                            currentIdx++;
+                        } else {
+                            clearInterval(timer);
+                            setIsTyping(false);
+                        }
+                    }, 25);
                 }
             } else {
                 toast.error("AI service failure.");
+                setIsLoading(false);
             }
         } catch (error) {
             console.error("AI Error:", error);
             toast.error("Failed to connect to AI service.");
-        } finally {
             setIsLoading(false);
         }
     };
@@ -126,8 +178,8 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                                 <SparklesSVG className="w-6 h-6 animate-pulse" />
                             </div>
                             <div>
-                                <h4 className="text-base font-bold text-gray-900 dark:text-white">Ask AI</h4>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Have questions? Ask AI about this article in real-time.</p>
+                                <h4 className="text-base font-bold text-gray-900 dark:text-white">Ask Lexa</h4>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Have questions? Ask the Engine Blog AI Assistant in real-time.</p>
                             </div>
                         </div>
                         <button
@@ -184,7 +236,8 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                                     <SparklesSVG className="w-4 h-4 animate-pulse" />
                                 </div>
                                 <div>
-                                    <h4 className="text-sm font-bold text-gray-900 dark:text-white">Ask AI</h4>
+                                    <h4 className="text-sm font-bold text-gray-900 dark:text-white">Lexa</h4>
+                                    <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest font-black">Engine Blog AI</p>
                                 </div>
                             </div>
                             <button
@@ -199,7 +252,7 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                         <div className="flex items-center gap-2 p-3 overflow-x-auto no-scrollbar border-b border-gray-100 dark:border-gray-800">
                             <button
                                 onClick={() => handleAIAction("summary")}
-                                disabled={isLoading}
+                                disabled={isLoading || isTyping}
                                 className="flex-none flex items-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-widest bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all disabled:opacity-50 shadow-sm"
                             >
                                 <FontAwesomeIcon icon={faMagic} />
@@ -207,7 +260,7 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                             </button>
                             <button
                                 onClick={() => handleAIAction("takeaways")}
-                                disabled={isLoading}
+                                disabled={isLoading || isTyping}
                                 className="flex-none flex items-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-widest bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all disabled:opacity-50 shadow-sm"
                             >
                                 <FontAwesomeIcon icon={faList} />
@@ -215,7 +268,7 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                             </button>
                             <button
                                 onClick={() => handleAIAction("explain")}
-                                disabled={isLoading}
+                                disabled={isLoading || isTyping}
                                 className="flex-none flex items-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-widest bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all disabled:opacity-50 shadow-sm"
                             >
                                 <FontAwesomeIcon icon={faLightbulb} />
@@ -231,7 +284,7 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                                         <SparklesSVG className="w-8 h-8 text-blue-500/50" />
                                     </div>
                                     <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-relaxed">
-                                        Ask me anything about this article
+                                        Hi, I'm Lexa. Ask me anything!
                                     </p>
                                 </div>
                             )}
@@ -243,10 +296,14 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                                             className="flex flex-col gap-4 pr-2"
                                         >
                                             {chatHistory.map((msg, i) => (
-                                                <div key={i} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
-                                                    <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-sm shadow-sm ${msg.role === "user"
+                                                <div
+                                                    key={i}
+                                                    ref={i === chatHistory.length - 1 ? lastMessageRef : null}
+                                                    className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
+                                                >
+                                                    <div className={`max-w-[100%] px-4 py-2.5 rounded-2xl text-sm ${msg.role === "user"
                                                         ? "bg-blue-600 text-white rounded-tr-none"
-                                                        : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-100 dark:border-gray-800 rounded-tl-none"
+                                                        : "bg-transparent dark:bg-transparent text-gray-800 dark:text-gray-200"
                                                         }`}>
                                                         {msg.role === "assistant" ? (
                                                             <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -266,13 +323,15 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                                                 </div>
                                             ))}
                                             {isLoading && (
-                                                <div className="flex items-center gap-1.5 px-2 py-1">
+                                                <div
+                                                    className="flex items-center gap-1.5 px-2 py-1"
+                                                    ref={lastMessageRef}
+                                                >
                                                     <div className="h-1.5 w-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                                                     <div className="h-1.5 w-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                                                     <div className="h-1.5 w-1.5 bg-blue-600 rounded-full animate-bounce"></div>
                                                 </div>
                                             )}
-                                            <div ref={messagesEndRef} />
                                         </div>
                                     ) : (
                                         <div className="animate-in fade-in duration-500">
@@ -319,12 +378,12 @@ export default function AITools({ content, showBanner = false }: AIToolsProps) {
                                     value={question}
                                     onChange={(e) => setQuestion(e.target.value)}
                                     onKeyDown={(e) => e.key === "Enter" && handleAIAction("ask")}
-                                    placeholder="Ask anything..."
+                                    placeholder="Message Lexa..."
                                     className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 focus:border-blue-500/50 focus:bg-white dark:focus:bg-gray-900 outline-none rounded-2xl px-4 py-3 text-sm transition-all shadow-inner pr-12 text-gray-700 dark:text-gray-200"
                                 />
                                 <button
                                     onClick={() => handleAIAction("ask")}
-                                    disabled={isLoading || !question.trim()}
+                                    disabled={isLoading || isTyping || !question.trim()}
                                     className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:bg-gray-400 shadow-md shadow-blue-500/20"
                                 >
                                     <FontAwesomeIcon icon={faPaperPlane} className="text-xs" />

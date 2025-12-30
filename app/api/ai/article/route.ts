@@ -3,25 +3,33 @@ import { NextResponse } from "next/server";
 const HF_API_KEY = process.env.HF_API_KEY!;
 
 export async function POST(req: Request) {
-    const { content, type, question, history } = await req.json();
+    const { content, type, question, history, publishDate, authorName } = await req.json();
 
     const model = "meta-llama/Llama-3.2-3B-Instruct";
 
-    const systemPrompt = "You are a helpful assistant that summarizes and explains blog posts clearly and concisely. You MUST provide ONLY the requested content without any introductory or concluding remarks (e.g., do NOT say 'Here is a summary' or 'I hope this helps'). Be direct.";
+    const systemPrompt = `Your name is Lexa. You are the official Engine Blog AI Assistant. You are a helpful, professional, and slightly tech-savvy assistant that summarizes and explains blog posts clearly and concisely. When asked about your identity, always state you are Lexa from Engine Blog. You MUST provide ONLY the requested content unless asked about yourself. Be direct and friendly. This current post was written by ${authorName || "an unknown author"} and published on: ${publishDate || "an unknown date"}.`;
 
     let messages: any[] = [
         { role: "system", content: systemPrompt }
     ];
 
     if (type === "ask") {
-        // Provide article context first
+        // Provide article context first with metadata
         messages.push({
             role: "user",
-            content: `Context Article:\n${content}\n\nPlease answer my questions based strictly on this article.`
+            content: `Article Context Information:
+Title: ${content.split('\n')[0] || "Blog Post"}
+Author: ${authorName || "Unknown"}
+Published Date: ${publishDate ? new Date(publishDate).toLocaleDateString() : "Unknown"}
+
+Article Content:
+${content}
+
+Please answer my questions based on both the article content and the metadata provided above.`
         });
         messages.push({
             role: "assistant",
-            content: "I have processed the article and I'm ready to answer any questions you have about it."
+            content: "I've processed the article and the details regarding its author and publication date. I'm ready to answer any questions you have!"
         });
 
         // Add conversation history
