@@ -1,7 +1,8 @@
 import Link from "next/link";
 import SearchInput from "./SearchInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faBell, faLayerGroup, faNewspaper, faLink, faCalendarDays, faFire } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faBell, faLayerGroup, faNewspaper, faLink, faCalendarDays, faFire, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { SignedIn } from "@clerk/nextjs";
 
 export default function Sidebar({
     categories,
@@ -18,6 +19,31 @@ export default function Sidebar({
 }) {
     return (
         <aside className="space-y-8">
+            {/* Saved Posts - Quick Access */}
+            <SignedIn>
+                <section className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-5 shadow-lg shadow-blue-500/20 text-white group overflow-hidden relative">
+                    {/* Decorative Background Icon */}
+                    <FontAwesomeIcon
+                        icon={faBookmark}
+                        className="absolute -right-4 -bottom-4 text-white/10 text-8xl transform -rotate-12 group-hover:scale-110 group-hover:rotate-0 transition-all duration-500"
+                    />
+
+                    <h3 className="text-lg font-bold mb-2 flex items-center gap-3 relative z-10">
+                        <FontAwesomeIcon icon={faBookmark} className="text-white/90" />
+                        <span>My Collection</span>
+                    </h3>
+                    <p className="text-xs text-white/70 mb-4 relative z-10 leading-relaxed">
+                        Access all the articles and insights you've saved for later.
+                    </p>
+                    <Link
+                        href="/bookmarks"
+                        className="inline-flex items-center justify-center w-full py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 relative z-10 border border-white/10"
+                    >
+                        View Saved Posts
+                    </Link>
+                </section>
+            </SignedIn>
+
             {/* Search */}
             <section className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm border border-gray-100 dark:border-gray-700 font-sans">
                 <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-3">

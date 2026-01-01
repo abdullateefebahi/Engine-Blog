@@ -3,9 +3,12 @@ import { useState, useEffect } from "react";
 import { useSignIn, useSignUp, useClerk, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 interface AuthScreenProps {
-    initialMode?: "login" | "signup" | "forgot" | "verify";
+    initialMode?: "login" | "signup" | "forgot" | "verify" | "reset";
 }
 
 export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
@@ -20,6 +23,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [code, setCode] = useState(""); // For signup verification
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
@@ -46,13 +50,13 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
             const status = searchParams.get("__clerk_status");
 
             if (status === "client_mismatch" && !ticket) {
-                // Explicitly handle the confusing case where status is present but ticket is gone
+                // This happens when the user opens the verification link on a different device/browser.
+                // Clerk redirects back with this status. Without the ticket, we can't automate it easily,
+                // but we should explain the situation clearly.
                 setMessage({
                     type: "error",
-                    text: "Verification link incomplete. Please request a new magic link.",
+                    text: "Device mismatch detected. For security, please complete the verification on the same device and browser where you started signing up.",
                 });
-                // Ensure we are in a mode that shows the message, but don't auto-redirect to login if it hides the error.
-                // Staying on current mode or defaulting to verify (with error)
                 setMode("login");
                 return;
             }
@@ -188,10 +192,20 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                     strategy: "reset_password_email_code",
                     identifier: email.trim().toLowerCase(),
                 });
-                setMessage({ type: "success", text: "If an account exists, you will receive a reset code via email." });
-                // Instead of pushing to a non-existent page, stay on this page but maybe enter a "reset" mode
-                // Or if there is a real page, we can go there. But based on file check, let's keep it simple.
-                // For now, let's just show the message and let them know a code was sent.
+                setMessage({ type: "success", text: "Code sent! Check your email." });
+                setMode("reset");
+            } else if (mode === "reset") {
+                const result = await signIn.attemptFirstFactor({
+                    strategy: "reset_password_email_code",
+                    code,
+                    password: password,
+                });
+
+                if (result.status === "complete") {
+                    await setSignInActive({ session: result.createdSessionId });
+                    toast.success("Password reset successfully!");
+                    router.push("/");
+                }
             }
         } catch (err: any) {
             console.error("Auth error:", err);
@@ -209,9 +223,6 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
             <div className="absolute bottom-0 -right-1/4 w-1/2 h-1/2 bg-indigo-500/10 dark:bg-indigo-600/10 blur-[120px] rounded-full" />
 
             <div className="max-w-md w-full space-y-8 relative z-10 transition-all duration-500">
-                {/* Clerk CAPTCHA element - required for bot protection in custom flows */}
-                <div id="clerk-captcha"></div>
-
                 <div className="text-center">
                     <Link href="/" className="inline-block mb-6">
                         <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -219,7 +230,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                         </span>
                     </Link>
                     <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                        {mode === "login" ? "Welcome Back" : mode === "signup" ? "Create Account" : mode === "verify" ? "Verify Email" : "Reset Password"}
+                        {mode === "login" ? "Welcome Back" : mode === "signup" ? "Create Account" : mode === "verify" ? "Verify Email" : mode === "forgot" ? "Forgot Password" : "Reset Password"}
                     </h2>
                     <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                         {mode === "login"
@@ -228,7 +239,9 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                 ? "Join the community to interact with posts"
                                 : mode === "verify"
                                     ? "Enter the code sent to your email"
-                                    : "Enter your email to receive a reset link"}
+                                    : mode === "forgot"
+                                        ? "Enter your email to receive a reset link"
+                                        : "Enter the code and your new password"}
                     </p>
                 </div>
 
@@ -289,7 +302,9 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                     </div>
                                 )}
 
-                                {mode !== "verify" && (
+
+
+                                {(mode !== "verify" && mode !== "reset") && (
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 ml-1 mb-1.5">
                                             Email Address
@@ -332,11 +347,27 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                     </div>
                                 )}
 
-                                {(mode === "login" || mode === "signup") && (
+                                {mode === "reset" && (
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 ml-1 mb-1.5">
+                                            Reset Code
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={code}
+                                            onChange={(e) => setCode(e.target.value)}
+                                            placeholder="123456"
+                                            className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white"
+                                            required
+                                        />
+                                    </div>
+                                )}
+
+                                {(mode === "login" || mode === "signup" || mode === "reset") && (
                                     <div>
                                         <div className="flex items-center justify-between ml-1 mb-1.5">
                                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                Password
+                                                {mode === "reset" ? "New Password" : "Password"}
                                             </label>
                                             {mode === "login" && (
                                                 <button
@@ -348,14 +379,23 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                                 </button>
                                             )}
                                         </div>
-                                        <input
-                                            type="password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                            placeholder="••••••••"
-                                            className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white"
-                                            required
-                                        />
+                                        <div className="relative group">
+                                            <input
+                                                type={showPassword ? "text" : "password"}
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                placeholder="••••••••"
+                                                className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white pr-12"
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                                            >
+                                                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="w-4 h-4" />
+                                            </button>
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -384,10 +424,13 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                             Processing...
                                         </span>
                                     ) : (
-                                        mode === "login" ? "Sign In" : mode === "signup" ? "Create Account" : "Send Reset Link"
+                                        mode === "login" ? "Sign In" : mode === "signup" ? "Create Account" : mode === "forgot" ? "Send Reset Link" : "Reset Password"
                                     )}
                                 </button>
                             )}
+
+                            {/* Clerk CAPTCHA element - required for bot protection in custom flows */}
+                            <div id="clerk-captcha" className="mt-4"></div>
                         </form>
                     )}
 
@@ -431,7 +474,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                     )}
 
                     <div className="mt-8 text-center space-y-3">
-                        {mode === "forgot" || mode === "verify" ? (
+                        {mode === "forgot" || mode === "verify" || mode === "reset" ? (
                             <button
                                 onClick={() => setMode("login")}
                                 className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors"

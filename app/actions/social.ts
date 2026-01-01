@@ -3,6 +3,32 @@
 import { auth } from "@clerk/nextjs/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+
+const commentSchema = z.object({
+    postSlug: z.string().min(1, "Post slug is required"),
+    userName: z.string().min(1, "Username is required").max(100),
+    userAvatar: z.string().nullable().optional(),
+    comment: z.string().min(1, "Comment cannot be empty").max(1000, "Comment is too long"),
+    parentId: z.number().nullable().optional(),
+});
+
+const reactionSchema = z.object({
+    postSlug: z.string().min(1),
+    reaction: z.string().min(1),
+    guestId: z.string().nullable().optional(),
+});
+
+const toggleReactionSchema = z.object({
+    postSlug: z.string().min(1),
+    reaction: z.string().min(1),
+    commentId: z.number().nullable().optional(),
+    guestId: z.string().nullable().optional(),
+});
+
+const bookmarkSchema = z.object({
+    postSlug: z.string().min(1),
+});
 
 export async function addCommentAction({
     postSlug,
@@ -17,6 +43,18 @@ export async function addCommentAction({
     comment: string;
     parentId?: number | null;
 }) {
+    // Validate input
+    const result = commentSchema.safeParse({
+        postSlug,
+        userName,
+        userAvatar,
+        comment,
+        parentId,
+    });
+
+    if (!result.success) {
+        throw new Error("Invalid input: " + result.error.issues.map((e) => e.message).join(", "));
+    }
     const { userId } = await auth();
     const effectiveUserId = userId || "guest";
     console.log("Server Action: addCommentAction called. effectiveUserId:", effectiveUserId);
@@ -53,6 +91,8 @@ export async function addReactionAction({
     reaction: string;
     guestId?: string | null;
 }) {
+    const result = reactionSchema.safeParse({ postSlug, reaction, guestId });
+    if (!result.success) throw new Error("Invalid Input");
     const { userId } = await auth();
     const finalUserId = userId || guestId;
 
@@ -86,6 +126,8 @@ export async function removeReactionAction({
     reaction: string;
     guestId?: string | null;
 }) {
+    const result = reactionSchema.safeParse({ postSlug, reaction, guestId });
+    if (!result.success) throw new Error("Invalid Input");
     const { userId } = await auth();
     const finalUserId = userId || guestId;
 
@@ -147,6 +189,9 @@ export async function toggleReactionAction({
     commentId?: number | null;
     guestId?: string | null;
 }) {
+    const result = toggleReactionSchema.safeParse({ postSlug, reaction, commentId, guestId });
+    if (!result.success) throw new Error("Invalid Input");
+
     const { userId } = await auth();
     const finalUserId = userId || guestId;
 
@@ -212,6 +257,8 @@ export async function toggleBookmarkAction({
 }: {
     postSlug: string;
 }) {
+    const result = bookmarkSchema.safeParse({ postSlug });
+    if (!result.success) throw new Error("Invalid Input");
     const { userId } = await auth();
 
     if (!userId) {

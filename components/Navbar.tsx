@@ -7,8 +7,9 @@ import icon from "@/public/icon.png";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { logAnalyticsEvent } from "@/lib/firebase";
-import { faHome, faCalendarDays, faLayerGroup, faBell, faInfoCircle, faCalendarDay, faSignOut, faSignIn, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faCalendarDays, faLayerGroup, faBell, faInfoCircle, faCalendarDay, faSignOut, faSignIn, faBookmark, faSearch } from "@fortawesome/free-solid-svg-icons";
 import ThemeToggle from "./ThemeToggle";
+import CommandPalette from "./CommandPalette";
 import { useUser, SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 
 export default function Navbar() {
@@ -25,7 +26,7 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
@@ -48,14 +49,14 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop menu */}
-          <div className="hidden lg:flex items-center space-x-1 xl:space-x-4">
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-1 xl:gap-2">
             <NavLink href="/">Home</NavLink>
             <NavLink href="/events">Events</NavLink>
 
             {/* Categories Dropdown */}
             <div className="relative group">
-              <button className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+              <button className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-1 group-hover:text-blue-600 dark:group-hover:text-blue-400">
                 Categories
                 <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -75,11 +76,19 @@ export default function Navbar() {
               </div>
             </div>
 
-            <NavLink href="/notices">Notices</NavLink>
-            <NavLink href="/about">About</NavLink>
+            <div className="hidden xl:flex items-center gap-1">
+              <NavLink href="/notices">Notices</NavLink>
+              <NavLink href="/about">About</NavLink>
+            </div>
+
+            {/* Search integrated here */}
+            <div className="ml-2 xl:ml-4">
+              <CommandPalette />
+            </div>
 
             {/* Auth Buttons */}
             <div className="flex items-center gap-2 xl:gap-4 ml-2 xl:ml-4 pl-2 xl:pl-4 border-l border-gray-100 dark:border-gray-800">
+
               <div className="ml-2">
                 <SignedIn>
                   <div className="flex items-center gap-4">
@@ -97,18 +106,7 @@ export default function Navbar() {
                         </span>
                       </div>
                     </Link>
-                    <Link href="/bookmarks" className="flex items-center gap-2 group p-2 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg transition-all text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-blue-600 dark:hover:text-blue-400" title="Saved Posts">
-                      <FontAwesomeIcon icon={faBookmark} className="text-lg" />
-                      <span className="hidden xl:inline">Saved</span>
-                    </Link>
-                    <button
-                      onClick={() => signOut(() => router.push("/"))}
-                      className="flex items-center gap-2 px-3 py-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all text-xs font-bold uppercase tracking-wider"
-                      title="Sign Out"
-                    >
-                      <FontAwesomeIcon icon={faSignOut} />
-                      <span className="hidden lg:inline">Sign Out</span>
-                    </button>
+
                   </div>
                 </SignedIn>
                 <SignedOut>
@@ -267,7 +265,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <Link
       href={href}
-      className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-widest transition-colors"
+      className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-2 xl:px-3 py-2 rounded-md text-sm font-bold uppercase tracking-widest transition-colors"
     >
       {children}
     </Link>

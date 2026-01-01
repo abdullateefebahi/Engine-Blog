@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import FirebaseAnalytics from "@/components/FirebaseAnalytics";
@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import NextTopLoader from "nextjs-toploader";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
+import ConnectionStatus from "@/components/ConnectionStatus";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,7 +48,23 @@ export const metadata: Metadata = {
     description: "Official digital heartbeat of the Faculty of Engineering, UNIBEN.",
     images: ["/og-image.png"],
   },
+  appleWebApp: {
+    capable: true,
+    title: "Engine Blog",
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://engine-blog.vercel.app"),
+};
+
+export const viewport: Viewport = {
+  themeColor: '#2563eb',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -79,6 +96,7 @@ export default function RootLayout({
             <FirebaseAnalytics />
             <Navbar />
             <Toaster position="bottom-right" />
+            <ConnectionStatus />
             {children}
             <Footer />
             <ScrollToTop />

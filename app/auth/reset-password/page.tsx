@@ -4,10 +4,14 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export default function ResetPasswordPage() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
     const router = useRouter();
@@ -62,36 +66,54 @@ export default function ResetPasswordPage() {
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 ml-1 mb-1.5">
                                     New Password
                                 </label>
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="••••••••"
-                                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white"
-                                    required
-                                    minLength={6}
-                                />
+                                <div className="relative group">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="••••••••"
+                                        className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white pr-12"
+                                        required
+                                        minLength={6}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                                    >
+                                        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="w-4 h-4" />
+                                    </button>
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 ml-1 mb-1.5">
                                     Confirm New Password
                                 </label>
-                                <input
-                                    type="password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    placeholder="••••••••"
-                                    className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white"
-                                    required
-                                    minLength={6}
-                                />
+                                <div className="relative group">
+                                    <input
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        placeholder="••••••••"
+                                        className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white pr-12"
+                                        required
+                                        minLength={6}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                                    >
+                                        <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} className="w-4 h-4" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
                         {message && (
                             <div className={`p-4 rounded-xl text-sm ${message.type === "success"
-                                    ? "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-100 dark:border-green-800"
-                                    : "bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800"
+                                ? "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-100 dark:border-green-800"
+                                : "bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800"
                                 }`}>
                                 {message.text}
                             </div>

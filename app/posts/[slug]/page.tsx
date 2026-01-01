@@ -3,7 +3,7 @@ export const dynamic = "force-static";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
-import { getAllPosts, getPost } from "@/lib/posts";
+import { getAllPosts, getPost, getRelatedPosts } from "@/lib/posts";
 import { remark } from "remark";
 import html from "remark-html";
 import Image from "next/image";
@@ -14,6 +14,7 @@ import CommentsSection from "@/components/Comments";
 import Reactions from "@/components/Reactions";
 import LightboxImage from "@/components/LightboxImage";
 import AITools from "@/components/AITools";
+import RelatedPosts from "@/components/RelatedPosts";
 import { portableTextToPlainText } from "@/lib/utils";
 
 export async function generateMetadata(props: {
@@ -76,6 +77,8 @@ export default async function PostPage(props: {
   if (!post) {
     notFound();
   }
+
+  const relatedPosts = await getRelatedPosts(post.slug, post.categories || []);
 
   // Handle both local markdown (data.content) and Sanity (post.body) logic
   const content = post.body || "";
@@ -170,9 +173,13 @@ export default async function PostPage(props: {
 
           <div className="flex flex-wrap gap-2">
             {post.categories?.map((cat: string) => (
-              <span key={cat} className="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 rounded-full uppercase tracking-wider">
+              <Link
+                key={cat}
+                href={`/?category=${encodeURIComponent(cat)}`}
+                className="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 rounded-full uppercase tracking-wider hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+              >
                 {cat}
-              </span>
+              </Link>
             ))}
           </div>
         </div>
@@ -198,6 +205,8 @@ export default async function PostPage(props: {
         </div>
 
         <CommentsSection postSlug={post.slug} />
+
+        <RelatedPosts posts={relatedPosts} />
       </article>
     </main>
   );

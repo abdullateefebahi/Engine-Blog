@@ -155,3 +155,22 @@ export async function getPostsBySlugs(slugs: string[]) {
     { slugs }
   );
 }
+
+export async function getRelatedPosts(slug: string, categories: string[]) {
+  return client.fetch(
+    `
+    *[_type == "post" && slug.current != $slug && count((categories[]->title)[@ in $categories]) > 0] | order(publishedAt desc)[0...3] {
+      _id,
+      title,
+      "slug": slug.current,
+      "categories": categories[]->title,
+      "coverImage": mainImage.asset->url,
+      publishedAt,
+      excerpt,
+      "author": author->name,
+      "authorImage": author->image.asset->url
+    }
+  `,
+    { slug, categories }
+  );
+}

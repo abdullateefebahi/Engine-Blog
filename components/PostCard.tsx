@@ -58,17 +58,24 @@ export default function PostCard({ post }: any) {
       )}
 
       <div className="flex flex-col flex-grow p-6">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-4">
+        <div className="relative z-10 flex flex-wrap items-center gap-x-3 gap-y-2 mb-4">
           {Array.isArray(post.categories) ? (
             post.categories.map((cat: string) => (
-              <span key={cat} className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full">
+              <Link
+                key={cat}
+                href={`/?category=${encodeURIComponent(cat)}`}
+                className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+              >
                 {cat}
-              </span>
+              </Link>
             ))
           ) : post.category ? (
-            <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full">
+            <Link
+              href={`/?category=${encodeURIComponent(post.category)}`}
+              className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+            >
               {post.category}
-            </span>
+            </Link>
           ) : null}
           <span className="text-xs text-gray-500 dark:text-gray-400 items-center ml-2">
             <FontAwesomeIcon icon={faCalendar} size="lg" className="mr-2 text-blue-800 dark:text-blue-400" />
