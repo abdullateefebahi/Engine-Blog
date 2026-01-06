@@ -1,0 +1,1 @@
+npm install --legacy-peer-deps --save @sanity/vision@4 sanity@4 @sanity/image-url@1 styled-components@6 @sanity/icons'

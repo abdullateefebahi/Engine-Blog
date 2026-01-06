@@ -1,6 +1,7 @@
 {
   "name": "engine-blog",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,9 +10,35 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.36.5",
+    "@fortawesome/fontawesome-free": "^7.1.0",
+    "@fortawesome/free-regular-svg-icons": "^7.1.0",
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@fortawesome/react-fontawesome": "^3.1.1",
+    "@portabletext/react": "^6.0.0",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.22.0",
+    "@supabase/supabase-js": "^2.89.0",
+    "browser-image-compression": "^2.0.2",
+    "clsx": "^2.1.1",
+    "firebase": "^12.7.0",
+    "framer-motion": "^12.23.26",
+    "gray-matter": "^4.0.3",
+    "ldrs": "^1.1.9",
     "next": "16.0.10",
-    "react": "19.2.1",
-    "react-dom": "19.2.1"
+    "next-sanity": "^11.6.12",
+    "next-themes": "^0.4.6",
+    "nextjs-toploader": "^3.9.17",
+    "react-hot-toast": "^2.6.0",
+    "react-markdown": "^10.1.0",
+    "remark": "^15.0.1",
+    "remark-html": "^16.0.1",
+    "sanity": "^4.22.0",
+    "server-only": "^0.0.1",
+    "styled-components": "^6.1.19",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
