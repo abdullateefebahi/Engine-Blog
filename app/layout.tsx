@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://engine-blog.vercel.app",
+    url: "https://engineblog.live",
     siteName: "Engine Blog",
     images: [
       {
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://engine-blog.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://engineblog.live"),
 };
 
 export const viewport: Viewport = {

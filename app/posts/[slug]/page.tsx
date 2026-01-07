@@ -27,7 +27,7 @@ export async function generateMetadata(props: {
     notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://engine-blog.vercel.app"; // Fallback URL
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://engineblog.live"; // Fallback URL
 
   return {
     title: post.title,
