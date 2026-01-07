@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmarkRegular } from "@fortawesome/free-regular-svg-icons";
 import { toggleBookmarkAction, checkBookmarkAction } from "@/app/actions/social";
+import { logAnalyticsEvent } from "@/lib/firebase";
 import toast from "react-hot-toast";
 import { useAuth } from "@clerk/nextjs";
 
@@ -43,8 +44,10 @@ export default function BookmarkButton({ postSlug }: BookmarkButtonProps) {
             const result = await toggleBookmarkAction({ postSlug });
             if (result.action === "added") {
                 toast.success("Post saved to bookmarks");
+                logAnalyticsEvent("bookmark_add", { post_slug: postSlug });
             } else {
                 toast("Post removed from bookmarks", { icon: "🗑️" });
+                logAnalyticsEvent("bookmark_remove", { post_slug: postSlug });
             }
         } catch (error: any) {
             // Revert on error

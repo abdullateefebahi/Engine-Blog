@@ -56,6 +56,17 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://engineblog.live"),
 };
 

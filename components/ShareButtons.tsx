@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { logAnalyticsEvent } from "@/lib/firebase";
 
 interface ShareButtonsProps {
     url: string;
@@ -92,7 +93,10 @@ export default function ShareButtons({ url, title }: ShareButtonsProps) {
                     rel="noopener noreferrer"
                     title={`Share on ${link.name}`}
                     className={`p-2 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 transition-all duration-300 ${link.color}`}
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        logAnalyticsEvent("share", { method: link.name, content_type: "post", item_id: fullUrl });
+                    }}
                 >
                     {link.icon}
                 </a>
@@ -101,6 +105,7 @@ export default function ShareButtons({ url, title }: ShareButtonsProps) {
                 onClick={(e) => {
                     e.stopPropagation();
                     copyToClipboard();
+                    logAnalyticsEvent("share", { method: "copy_link", content_type: "post", item_id: fullUrl });
                 }}
                 title="Copy Link"
                 className={`flex items-center gap-2 px-3 py-2 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 transition-all duration-300 hover:border-blue-500 hover:text-blue-500 bg-transparent cursor-pointer`}
