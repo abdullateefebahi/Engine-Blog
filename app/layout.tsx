@@ -11,6 +11,7 @@ import NextTopLoader from "nextjs-toploader";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
 import ConnectionStatus from "@/components/ConnectionStatus";
+import UsernameCheck from "@/components/UsernameCheck";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -95,6 +96,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <UsernameCheck />
             <NextTopLoader
               color="#2563eb"
               height={3}

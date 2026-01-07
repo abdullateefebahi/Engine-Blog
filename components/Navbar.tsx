@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getAllCategories } from "@/lib/posts";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import icon from "@/public/icon.png";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,10 +19,13 @@ export default function Navbar() {
   const { user, isLoaded, isSignedIn } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     getAllCategories().then(setCategories);
   }, []);
+
+  if (pathname === "/onboarding") return null;
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
