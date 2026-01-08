@@ -30,70 +30,12 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    // Redirect if already signed in, but ONLY if we are not in the middle of a verification flow.
+    // Redirect if already signed in
     useEffect(() => {
-        const ticket = searchParams.get("__clerk_ticket");
-        const status = searchParams.get("__clerk_status");
-
-        // If these params exist, let the verification effect handle the flow.
-        if (ticket || status) return;
-
         if (userLoaded && isSignedIn) {
             router.push("/");
         }
-    }, [userLoaded, isSignedIn, router, searchParams]);
-
-    // Handle magic link verification and errors
-    useEffect(() => {
-        const handleVerification = async () => {
-            const ticket = searchParams.get("__clerk_ticket");
-            const status = searchParams.get("__clerk_status");
-
-            if (status === "client_mismatch" && !ticket) {
-                // This happens when the user opens the verification link on a different device/browser.
-                // Clerk redirects back with this status. Without the ticket, we can't automate it easily,
-                // but we should explain the situation clearly.
-                setMessage({
-                    type: "error",
-                    text: "Device mismatch detected. For security, please complete the verification on the same device and browser where you started signing up.",
-                });
-                setMode("login");
-                return;
-            }
-
-            if (ticket && clerk && !isSignedIn) {
-                setLoading(true);
-                setMode("verify");
-
-                // If it's a cross-device flow, inform the user but continue
-                if (status === "client_mismatch") {
-                    setMessage({
-                        type: "success",
-                        text: "Verifying your account on this device..."
-                    });
-                }
-                try {
-                    // Optimized for custom flow: this handles both signup and signin email links
-                    // and correctly handles cross-device verification.
-                    await clerk.handleEmailLinkVerification({
-                        redirectUrlComplete: "/",
-                        redirectUrl: "/"
-                    });
-                } catch (err: any) {
-                    console.error("Verification error:", err);
-                    setMessage({
-                        type: "error",
-                        text: err.errors?.[0]?.message || "This verification link is invalid or has expired."
-                    });
-                    // Stay on login so they can retry or see the error
-                    setMode("login");
-                } finally {
-                    setLoading(false);
-                }
-            }
-        };
-        handleVerification();
-    }, [searchParams, clerk, isSignedIn, router]);
+    }, [userLoaded, isSignedIn, router]);
 
     const handleGoogleSignIn = async () => {
         if (!signInLoaded) return;
@@ -137,6 +79,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
 
         setMessage(null);
         setLoading(true);
+        console.log("handleAuth mode:", mode);
 
         try {
             if (mode === "login") {
@@ -169,11 +112,10 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
 
                 if (result.status === "missing_requirements") {
                     await signUp.prepareEmailAddressVerification({
-                        strategy: "email_link",
-                        redirectUrl: window.location.origin + "/sign-up"
+                        strategy: "email_code",
                     });
                     setMode("verify");
-                    setMessage({ type: "success", text: "A verification link has been sent to your email. Please click it to complete your registration." });
+                    setMessage({ type: "success", text: "A verification code has been sent to your email. Please enter it below." });
                 } else if (result.status === "complete") {
                     await setSignUpActive({ session: result.createdSessionId });
                     router.push("/");
@@ -238,9 +180,9 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                             : mode === "signup"
                                 ? "Join the community to interact with posts"
                                 : mode === "verify"
-                                    ? "Enter the code sent to your email"
+                                    ? "Enter the 6-digit code sent to your email"
                                     : mode === "forgot"
-                                        ? "Enter your email to receive a reset link"
+                                        ? "Enter your email to receive a reset code"
                                         : "Enter the code and your new password"}
                     </p>
                 </div>
@@ -321,29 +263,47 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                 )}
 
                                 {mode === "verify" && (
-                                    <div className="text-center py-4">
-                                        <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
-                                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                            </svg>
+                                    <div className="space-y-6">
+                                        <div className="text-center">
+                                            <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                                                We've sent a 6-digit verification code to <span className="font-bold text-gray-900 dark:text-white">{email}</span>.
+                                            </p>
                                         </div>
-                                        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6">
-                                            We've sent a magic link to <span className="font-bold text-gray-900 dark:text-white">{email}</span>.
-                                            Click the link in the email to verify your account and sign in.
-                                        </p>
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                signUp?.prepareEmailAddressVerification({
-                                                    strategy: "email_link",
-                                                    redirectUrl: window.location.origin + "/sign-up"
-                                                });
-                                                setMessage({ type: "success", text: "New verification link sent!" });
-                                            }}
-                                            className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 uppercase tracking-widest"
-                                        >
-                                            Resend Magic Link
-                                        </button>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 ml-1 mb-1.5">
+                                                Verification Code
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={code}
+                                                onChange={(e) => setCode(e.target.value)}
+                                                placeholder="123456"
+                                                className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white text-center text-2xl tracking-[0.5em] font-bold"
+                                                required
+                                                maxLength={6}
+                                            />
+                                        </div>
+
+                                        <div className="text-center">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    signUp?.prepareEmailAddressVerification({
+                                                        strategy: "email_code",
+                                                    });
+                                                    setMessage({ type: "success", text: "New verification code sent!" });
+                                                }}
+                                                className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 uppercase tracking-widest"
+                                            >
+                                                Resend Code
+                                            </button>
+                                        </div>
                                     </div>
                                 )}
 
@@ -409,25 +369,23 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                 </div>
                             )}
 
-                            {mode !== "verify" && (
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-blue-500/25 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    {loading ? (
-                                        <span className="flex items-center justify-center gap-2">
-                                            <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} fill="none" />
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                            </svg>
-                                            Processing...
-                                        </span>
-                                    ) : (
-                                        mode === "login" ? "Sign In" : mode === "signup" ? "Create Account" : mode === "forgot" ? "Send Reset Link" : "Reset Password"
-                                    )}
-                                </button>
-                            )}
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-blue-500/25 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {loading ? (
+                                    <span className="flex items-center justify-center gap-2">
+                                        <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} fill="none" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                        </svg>
+                                        Processing...
+                                    </span>
+                                ) : (
+                                    mode === "login" ? "Sign In" : mode === "signup" ? "Create Account" : mode === "verify" ? "Verify Account" : mode === "forgot" ? "Send Reset Link" : "Reset Password"
+                                )}
+                            </button>
 
                             {/* Clerk CAPTCHA element - required for bot protection in custom flows */}
                             <div id="clerk-captcha" className="mt-4"></div>
