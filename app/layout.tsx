@@ -13,6 +13,7 @@ import { Toaster } from "react-hot-toast";
 import ConnectionStatus from "@/components/ConnectionStatus";
 import UsernameCheck from "@/components/UsernameCheck";
 import GoogleAdsense from "@/components/GoogleAdsense";
+import AutoTranslator from "@/components/AutoTranslator";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -116,6 +117,7 @@ export default function RootLayout({
             <ConnectionStatus />
             {children}
             <GoogleAdsense />
+            <AutoTranslator />
             <Footer />
             <ScrollToTop />
           </ThemeProvider>

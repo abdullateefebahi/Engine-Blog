@@ -2,13 +2,13 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAnalytics, isSupported, logEvent } from "firebase/analytics";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBaq7zo2dOjxPu2IweVqq7MN8-gC4J7ldA",
-    authDomain: "eng-blog-482004.firebaseapp.com",
-    projectId: "eng-blog-482004",
-    storageBucket: "eng-blog-482004.firebasestorage.app",
-    messagingSenderId: "729905401266",
-    appId: "1:729905401266:web:669d5540b4bdf175d968ab",
-    measurementId: "G-RN1FLEH4P4"
+    apiKey: "AIzaSyCerT9hzXIEFRFa7Sb6e3MXUDIA7OJWQmM",
+    authDomain: "engine-blog234.firebaseapp.com",
+    projectId: "engine-blog234",
+    storageBucket: "engine-blog234.firebasestorage.app",
+    messagingSenderId: "283883788684",
+    appId: "1:283883788684:web:310f7105d7694b31c29ea9",
+    measurementId: "G-X41HFX0H9V"
 };
 
 // Initialize Firebase

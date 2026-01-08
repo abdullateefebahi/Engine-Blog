@@ -56,8 +56,9 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="py-6 flex">
+        <div className="py-6 flex flex-wrap items-center gap-6">
           <ThemeToggle />
+          <div id="google_translate_element" className="google-translate-container"></div>
         </div>
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-gray-100 dark:border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4">
