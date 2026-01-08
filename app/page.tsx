@@ -11,6 +11,8 @@ import {
 import { getTrendingPosts, getNotices, getEvents } from "@/lib/api";
 import { searchProfiles } from "@/lib/profiles";
 import ProfileSearchCard from "@/components/ProfileSearchCard";
+import GoogleFeedAd from "@/components/GoogleFeedAd";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "Engine Blog",
@@ -120,8 +122,13 @@ export default async function Home(props: {
                     Articles
                   </h3>
                 )}
-                {posts.map((post: any) => (
-                  <PostCard key={post._id} post={post} />
+                {posts.map((post: any, index: number) => (
+                  <React.Fragment key={post._id}>
+                    <PostCard post={post} />
+                    {(index + 1) % 3 === 0 && index !== posts.length - 1 && (
+                      <GoogleFeedAd />
+                    )}
+                  </React.Fragment>
                 ))}
               </div>
             ) : (

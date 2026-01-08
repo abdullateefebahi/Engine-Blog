@@ -12,6 +12,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
 import ConnectionStatus from "@/components/ConnectionStatus";
 import UsernameCheck from "@/components/UsernameCheck";
+import GoogleAdsense from "@/components/GoogleAdsense";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -111,6 +112,7 @@ export default function RootLayout({
             <Toaster position="bottom-right" />
             <ConnectionStatus />
             {children}
+            <GoogleAdsense />
             <Footer />
             <ScrollToTop />
           </ThemeProvider>
