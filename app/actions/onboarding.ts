@@ -30,40 +30,54 @@ export async function submitOnboardingAction(formData: FormData) {
         const client = await clerkClient();
 
         // 1. Update Clerk User
-        await client.users.updateUser(userId, {
+        // This also returns the updated user object, which we can use for Supabase sync
+        const updatedUser = await client.users.updateUser(userId, {
             username: username,
         });
 
         // 2. Sync to Supabase (upsert)
-        // We need to fetch the user details from Clerk to get the latest info including email/avatar if needed
-        // But for now, we assume the user exists or will be created. 
-        // Usually a webhook handles creation, but here we enforce consistency.
-        const user = await client.users.getUser(userId);
-
-        const { error: supabaseError } = await supabaseAdmin.from("profiles").upsert({
-            id: userId,
-            username: username,
-            email: user.emailAddresses[0]?.emailAddress,
-            full_name: `${user.firstName || ""} ${user.lastName || ""}`.trim() || username,
-            avatar_url: user.imageUrl,
-            updated_at: new Date().toISOString(),
-        });
+        // We use the updatedUser directly to ensure we have the latest info
+        const { error: supabaseError } = await supabaseAdmin
+            .from("profiles")
+            .upsert({
+                id: userId,
+                username: username,
+                email: updatedUser.emailAddresses[0]?.emailAddress,
+                full_name: `${updatedUser.firstName || ""} ${updatedUser.lastName || ""}`.trim() || username,
+                avatar_url: updatedUser.imageUrl,
+                department: "General", // Default for new users
+                year_of_study: "N/A"    // Default for new users
+            }, {
+                onConflict: 'id'
+            });
 
         if (supabaseError) {
-            console.error("Supabase error:", supabaseError);
-            throw new Error("Failed to sync profile");
+            console.error("Supabase sync error details:", {
+                code: supabaseError.code,
+                message: supabaseError.message,
+                details: supabaseError.details,
+                hint: supabaseError.hint
+            });
+            throw new Error(`Failed to sync profile: ${supabaseError.message}`);
         }
+
+        // Revalidate paths to clear any stale cache
+        revalidatePath("/");
+        revalidatePath(`/${username}`);
 
         return { success: true };
     } catch (error: any) {
         console.error("Onboarding error:", error);
-        // Check for Clerk checks (e.g. username taken)
+
+        // Handle Clerk-specific errors
         if (error.errors && error.errors[0]?.code === "form_username_invalid") {
             throw new Error("Username is invalid.");
         }
         if (error.errors && error.errors[0]?.code === "form_identifier_exists") {
             throw new Error("Username is already taken.");
         }
+
+        // For other errors, provide the message or a fallback
         throw new Error(error.message || "Failed to update username");
     }
 }
