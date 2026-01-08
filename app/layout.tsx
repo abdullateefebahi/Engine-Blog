@@ -34,7 +34,6 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://engineblog.live",
-    url: "https://engineblog.live",
     siteName: "Engine Blog",
     images: [
       {
@@ -74,7 +73,6 @@ export const metadata: Metadata = {
   other: {
     "google-adsense-account": "ca-pub-7156272331216301",
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://engineblog.live"),
 };
 
 export const viewport: Viewport = {
