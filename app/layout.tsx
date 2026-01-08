@@ -70,6 +70,9 @@ export const metadata: Metadata = {
     },
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://engineblog.live"),
+  other: {
+    "google-adsense-account": "ca-pub-7156272331216301",
+  },
 };
 
 export const viewport: Viewport = {
