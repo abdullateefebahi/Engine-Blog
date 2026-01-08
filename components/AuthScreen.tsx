@@ -53,21 +53,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
         }
     };
 
-    const handleAppleSignIn = async () => {
-        if (!signInLoaded) return;
-        setLoading(true);
-        try {
-            await signIn.authenticateWithRedirect({
-                strategy: "oauth_apple",
-                redirectUrl: "/sso-callback",
-                redirectUrlComplete: "/",
-            });
-        } catch (err: any) {
-            setMessage({ type: "error", text: err.errors?.[0]?.message || "Apple sign-in failed" });
-        } finally {
-            setLoading(false);
-        }
-    };
+
 
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -403,11 +389,11 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                 </div>
                             </div>
 
-                            <div className="mt-6 grid grid-cols-2 gap-3">
+                            <div className="mt-6">
                                 <button
                                     onClick={handleGoogleSignIn}
                                     disabled={loading}
-                                    className="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold rounded-xl transition-all hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-[0.98] disabled:opacity-50"
+                                    className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold rounded-xl transition-all hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-[0.98] disabled:opacity-50"
                                 >
                                     <svg className="w-5 h-5" viewBox="0 0 24 24">
                                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -415,17 +401,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
                                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                                     </svg>
-                                    Google
-                                </button>
-                                <button
-                                    onClick={handleAppleSignIn}
-                                    disabled={loading}
-                                    className="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 font-semibold rounded-xl transition-all hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-[0.98] disabled:opacity-50"
-                                >
-                                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74 1.18 0 2.21-.93 3.69-.93.95 0 1.93.29 2.6.74-.66.86-1.57 2.07-1.57 3.92 0 2.39 1.74 3.24 1.76 3.26-.01.03-.69 2.4-2.56 5.14zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.16 2.29-2.04 4.16-3.74 4.25z" />
-                                    </svg>
-                                    Apple
+                                    Continue with Google
                                 </button>
                             </div>
                         </>
