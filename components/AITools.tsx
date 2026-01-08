@@ -178,7 +178,7 @@ export default function AITools({ content, showBanner = false, publishDate, auth
                                 <SparklesSVG className="w-6 h-6 animate-pulse" />
                             </div>
                             <div>
-                                <h4 className="text-base font-bold text-gray-900 dark:text-white">Ask Lexa</h4>
+                                <h4 className="text-base font-bold text-gray-900 dark:text-white">Ask Aria</h4>
                                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Have questions? Ask the Engine Blog AI Assistant in real-time.</p>
                             </div>
                         </div>
@@ -236,7 +236,7 @@ export default function AITools({ content, showBanner = false, publishDate, auth
                                     <SparklesSVG className="w-4 h-4 animate-pulse" />
                                 </div>
                                 <div>
-                                    <h4 className="text-sm font-bold text-gray-900 dark:text-white">Lexa</h4>
+                                    <h4 className="text-sm font-bold text-gray-900 dark:text-white">Aria</h4>
                                     <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest font-black">Engine Blog AI</p>
                                 </div>
                             </div>
@@ -284,7 +284,7 @@ export default function AITools({ content, showBanner = false, publishDate, auth
                                         <SparklesSVG className="w-8 h-8 text-blue-500/50" />
                                     </div>
                                     <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-relaxed">
-                                        Hi, I'm Lexa. Ask me anything!
+                                        Hi, I'm Aria. Ask me anything!
                                     </p>
                                 </div>
                             )}
@@ -378,7 +378,7 @@ export default function AITools({ content, showBanner = false, publishDate, auth
                                     value={question}
                                     onChange={(e) => setQuestion(e.target.value)}
                                     onKeyDown={(e) => e.key === "Enter" && handleAIAction("ask")}
-                                    placeholder="Message Lexa..."
+                                    placeholder="Message Aria..."
                                     className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 focus:border-blue-500/50 focus:bg-white dark:focus:bg-gray-900 outline-none rounded-2xl px-4 py-3 text-sm transition-all shadow-inner pr-12 text-gray-700 dark:text-gray-200"
                                 />
                                 <button
