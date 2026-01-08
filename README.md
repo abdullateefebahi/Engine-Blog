@@ -13,99 +13,127 @@ Engine Blog is a modern, dynamic web platform designed to keep engineering stude
 - **CMS**: [Sanity](https://www.sanity.io/)
 - **Analytics**: Firebase
 
+## 🎨 Design System
+
+We use a curated **dark‑mode friendly** palette with subtle glass‑morphism effects and micro‑animations. All tokens are defined in `app/globals.css` and can be extended via Tailwind's `theme.extend`.
+
+- **Primary**: `hsl(210, 70%, 55%)`
+- **Accent**: `hsl(340, 80%, 60%)`
+- **Background**: `hsl(210, 10%, 10%)`
+- **Surface**: `hsl(210, 10%, 15%)`
+- **Text**: `hsl(0, 0%, 95%)`
+
 ## 🚀 Getting Started
 
-1.  **Clone the repository**
-2.  **Install dependencies**:
-    ```bash
-    npm install
-    ```
-3.  **Set up Environment Variables**:
-    Create a `.env.local` file with the following keys:
-    ```env
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
-    CLERK_SECRET_KEY=...
-    NEXT_PUBLIC_SUPABASE_URL=...
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-    NEXT_PUBLIC_SANITY_PROJECT_ID=...
-    NEXT_PUBLIC_SANITY_DATASET=...
-    ```
-4.  **Run the development server**:
-    ```bash
-    npm run dev
-    ```
+1. **Clone the repository**
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Set up Environment Variables**:
+   Create a `.env.local` file with the following keys:
+   ```env
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
+   CLERK_SECRET_KEY=...
+   NEXT_PUBLIC_SUPABASE_URL=...
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+   NEXT_PUBLIC_SANITY_PROJECT_ID=...
+   NEXT_PUBLIC_SANITY_DATASET=...
+   ```
+4. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
 
 ---
 
 ## 📚 Content Strategy (The Blueprint)
 
-This blog follows a "Student-First" content strategy designed to be useful, popular, and trusted.
+This blog follows a "Student‑First" content strategy designed to be useful, popular, and trusted.
 
-### 1. Core Content (Must-Have)
-*   **Campus News**: Lecture updates, cancellations, exam timetables.
-*   **Academic Info**: Course registration guides, clearance procedures, GPA calculation.
-*   **Events**: Seminars, workshops, faculty week activities.
+### 1. Core Content (Must‑Have)
+- **Campus News**: Lecture updates, cancellations, exam timetables.
+- **Academic Info**: Course registration guides, clearance procedures, GPA calculation.
+- **Events**: Seminars, workshops, faculty week activities.
 
 ### 2. Student Life
-*   **Accommodation**: Hostel updates, rent info, off-campus tips.
-*   **Opportunities**: Scholarships, internships, SIWES placements.
-*   **Notices**: Lost & found, urgent announcements.
+- **Accommodation**: Hostel updates, rent info, off‑campus tips.
+- **Opportunities**: Scholarships, internships, SIWES placements.
+- **Notices**: Lost & found, urgent announcements.
 
 ### 3. Growth Boosters
-*   **Faculty Specifics**: Department updates (Mechatronics, Civil, etc.).
-*   **Spotlights**: Interviews with outstanding students and entrepreneurs.
-*   **Tech & Skills**: Coding guides and software recommendations.
+- **Faculty Specifics**: Department updates (Mechatronics, Civil, etc.).
+- **Spotlights**: Interviews with outstanding students and entrepreneurs.
+- **Tech & Skills**: Coding guides and software recommendations.
 
 ---
 
-## � Project Structure
+## 📁 Project Structure
 
 ```
 engine-blog/
-├── app/                  # Next.js App Router
-│   ├── (auth)/          # Authentication routes (Clerk)
-│   ├── actions/         # Server Actions
-│   ├── api/             # API Routes
-│   ├── posts/           # Blog post display logic
-│   ├── globals.css      # Global styles
-│   ├── layout.tsx       # Root layout
-│   └── page.tsx         # Homepage
-├── components/           # Reusable UI components
-│   ├── Navbar.tsx
-│   ├── Sidebar.tsx
-│   ├── PostCard.tsx
-│   ├── Comments.tsx
-│   └── ...
-├── lib/                  # Utilities & Database clients
-│   ├── supabase.ts
-│   ├── sanity/          # Sanity CMS client & queries
-│   └── utils.ts
-├── sanity/               # Sanity CMS configuration
-├── public/               # Static assets (images, icons)
-└── ...
+├─ app/                  # Next.js App Router
+│  ├─ (auth)/          # Authentication routes (Clerk)
+│  ├─ actions/         # Server Actions
+│  ├─ api/             # API Routes
+│  ├─ posts/           # Blog post display logic
+│  ├─ globals.css      # Global styles
+│  ├─ layout.tsx       # Root layout
+│  └─ page.tsx         # Homepage
+├─ components/           # Reusable UI components
+│  ├─ Navbar.tsx
+│  ├─ Sidebar.tsx
+│  ├─ PostCard.tsx
+│  ├─ Comments.tsx
+│  └─ ...
+├─ lib/                  # Utilities & Database clients
+│  ├─ supabase.ts
+│  ├─ sanity/          # Sanity CMS client & queries
+│  └─ utils.ts
+├─ sanity/               # Sanity CMS configuration
+├─ public/               # Static assets (images, icons)
+└─ ...
 ```
 
 ---
 
 ## 🛠️ Sanity Webhooks
 
-To ensure that reactions and comments are cleaned up in Supabase when a post is deleted in Sanity, you must set up a webhook:
+To ensure that reactions and comments are cleaned up in Supabase when a post is deleted in Sanity, set up a webhook:
 
-1.  Go to your [Sanity Management Dashboard](https://www.sanity.io/manage).
-2.  Navigate to **API** > **Webhooks**.
-3.  Click **Create Webhook**.
-4.  **Name**: Deletion Cleanup
-5.  **URL**: `https://your-domain.com/api/webhooks/sanity`
-6.  **Dataset**: Your active dataset (e.g., `production`).
-7.  **Trigger on**: `Deleted`.
-8.  **Filter**: `_type == "post"`.
-9.  **Projection**: `{ "slug": slug.current, "type": _type }`.
+1. Go to your [Sanity Management Dashboard](https://www.sanity.io/manage).
+2. Navigate to **API > Webhooks**.
+3. Click **Create Webhook**.
+4. **Name**: Deletion Cleanup
+5. **URL**: `https://your-domain.com/api/webhooks/sanity`
+6. **Dataset**: Your active dataset (e.g., `production`).
+7. **Trigger on**: `Deleted`.
+8. **Filter**: `_type == "post"`.
+9. **Projection**: `{ "slug": slug.current, "type": _type }`.
 10. **HTTP Method**: `POST`.
 
 ---
 
 ## 🤝 Contribution Guidelines
 
-*   **Verify Info**: Always verify news before pushing content.
-*   **Disclaimer**: Ensure the "Student-run platform" disclaimer is visible.
-*   **Code Style**: Follow standard Prettier/ESLint rules configured in the project.
+- **Verify Info**: Always verify news before pushing content.
+- **Disclaimer**: Ensure the "Student‑run platform" disclaimer is visible.
+- **Code Style**: Follow the Prettier/ESLint configuration in the repo.
+- **Pull Requests**: Fork the repo, create a feature branch, run `npm run lint && npm test`, then open a PR.
+- **Issue Reporting**: Use the issue template and include steps to reproduce.
+
+---
+
+## 📜 Code of Conduct
+
+Please read our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards.
+
+---
+
+## 📦 CI / CD
+
+[![Vercel Deploy](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-repo/engine-blog)
+
+---
+
+*Happy coding!*
