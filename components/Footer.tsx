@@ -1,9 +1,15 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import icon from "@/public/icon.png";
 import ThemeToggle from "./ThemeToggle";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname === "/onboarding") return null;
+
   return (
     <footer className="bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-900 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

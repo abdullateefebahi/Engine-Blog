@@ -11,6 +11,8 @@ import NextTopLoader from "nextjs-toploader";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
 import ConnectionStatus from "@/components/ConnectionStatus";
+import UsernameCheck from "@/components/UsernameCheck";
+import GoogleAdsense from "@/components/GoogleAdsense";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
+    url: "https://engineblog.live",
     url: "https://engineblog.live",
     siteName: "Engine Blog",
     images: [
@@ -56,6 +59,18 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://engineblog.live"),
   other: {
     "google-adsense-account": "ca-pub-7156272331216301",
   },
@@ -87,6 +102,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <UsernameCheck />
             <NextTopLoader
               color="#2563eb"
               height={3}
@@ -101,6 +117,7 @@ export default function RootLayout({
             <Toaster position="bottom-right" />
             <ConnectionStatus />
             {children}
+            <GoogleAdsense />
             <Footer />
             <ScrollToTop />
           </ThemeProvider>
