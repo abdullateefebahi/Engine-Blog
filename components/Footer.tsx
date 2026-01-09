@@ -68,10 +68,10 @@ export default function Footer() {
             <select
               value={locale}
               onChange={(e) => setLocale(e.target.value as "en" | "fr")}
-              className="bg-transparent text-[11px] font-bold text-gray-700 dark:text-gray-300 outline-none cursor-pointer uppercase tracking-tight"
+              className="bg-transparent text-[11px] font-bold text-gray-700 dark:text-gray-300 outline-none cursor-pointer uppercase tracking-tight [color-scheme:light] dark:[color-scheme:dark]"
             >
-              <option value="en">English</option>
-              <option value="fr">Français</option>
+              <option value="en" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">English</option>
+              <option value="fr" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">Français</option>
             </select>
           </div>
         </div>

@@ -549,16 +549,16 @@ export default function ProfilePage() {
                                             <select
                                                 value={yearOfStudy}
                                                 onChange={(e) => setYearOfStudy(e.target.value)}
-                                                className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all dark:text-white"
+                                                className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all dark:text-white [color-scheme:light] dark:[color-scheme:dark]"
                                             >
-                                                <option value="">Select Level</option>
-                                                <option value="100L">100 Level</option>
-                                                <option value="200L">200 Level</option>
-                                                <option value="300L">300 Level</option>
-                                                <option value="400L">400 Level</option>
-                                                <option value="500L">500 Level</option>
-                                                <option value="600L">600 Level</option>
-                                                <option value="Graduate">Graduate</option>
+                                                <option value="" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">Select Level</option>
+                                                <option value="100L" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">100 Level</option>
+                                                <option value="200L" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">200 Level</option>
+                                                <option value="300L" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">300 Level</option>
+                                                <option value="400L" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">400 Level</option>
+                                                <option value="500L" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">500 Level</option>
+                                                <option value="600L" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">600 Level</option>
+                                                <option value="Graduate" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">Graduate</option>
                                             </select>
                                         </div>
                                     </div>
