@@ -4,9 +4,11 @@ import Image from "next/image";
 import icon from "@/public/icon.png";
 import ThemeToggle from "./ThemeToggle";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 export default function Footer() {
   const pathname = usePathname();
+  const { t, locale, setLocale } = useTranslation();
 
   if (pathname === "/onboarding") return null;
 
@@ -30,44 +32,57 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-gray-500 dark:text-gray-400 max-w-sm leading-relaxed text-sm font-medium">
-              The official digital hub for the Faculty of Engineering at the University of Benin. Bridging the gap between engineering excellence and student life.
+              {t("Footer.description")}
             </p>
           </div>
 
           {/* Navigation */}
           <div>
-            <h4 className="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-6">Explore</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-6">{t("Footer.explore")}</h4>
             <ul className="space-y-4">
-              <li><Link href="/" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Home</Link></li>
-              <li><Link href="/events" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Events</Link></li>
-              <li><Link href="/notices" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Notices</Link></li>
-              <li><Link href="/credits" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Credits</Link></li>
-              <li><Link href="/about" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About Us</Link></li>
+              <li><Link href="/" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t("Navbar.home")}</Link></li>
+              <li><Link href="/events" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t("Navbar.events")}</Link></li>
+              <li><Link href="/notices" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t("Navbar.notices")}</Link></li>
+              <li><Link href="/credits" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t("Navbar.credits")}</Link></li>
+              <li><Link href="/about" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t("Navbar.about")}</Link></li>
             </ul>
           </div>
 
           {/* Legal & Policies */}
           <div>
-            <h4 className="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-6">Legal</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-6">{t("Footer.legal")}</h4>
             <ul className="space-y-4">
-              <li><Link href="/terms" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Terms of Service</Link></li>
-              <li><Link href="/privacy" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/guidelines" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Community Guidelines</Link></li>
+              <li><Link href="/terms" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t("Footer.terms")}</Link></li>
+              <li><Link href="/privacy" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t("Footer.privacy")}</Link></li>
+              <li><Link href="/guidelines" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t("Footer.guidelines")}</Link></li>
             </ul>
           </div>
         </div>
         <div className="py-6 flex flex-wrap items-center gap-6">
           <ThemeToggle />
-          <div id="google_translate_element" className="google-translate-container"></div>
+          <div className="flex items-center gap-3 bg-gray-50/50 dark:bg-gray-900/50 px-4 py-2 rounded-2xl border border-gray-100 dark:border-gray-800 transition-all hover:border-blue-500/30">
+            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-languages"><path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" /></svg>
+              {t("Footer.language")}
+            </span>
+            <select
+              value={locale}
+              onChange={(e) => setLocale(e.target.value as "en" | "fr")}
+              className="bg-transparent text-[11px] font-bold text-gray-700 dark:text-gray-300 outline-none cursor-pointer uppercase tracking-tight"
+            >
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+            </select>
+          </div>
         </div>
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-gray-100 dark:border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-            © {new Date().getFullYear()} Engine Blog.
+            {t("Footer.copyright", { year: new Date().getFullYear().toString() })}
           </p>
           <div className="flex gap-6 footer-links-out">
-            <a href="https://ohiocodespace.vercel.app" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors font-bold uppercase tracking-widest">Ohio Codespace</a>
-            <a href="https://github.com/Ghosty-s-Lab-Inc" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors font-bold uppercase tracking-widest">Ghosty's Lab Technology</a>
+            <a href="https://ohiocodespace.vercel.app" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors font-bold uppercase tracking-widest">{t("Footer.developer1")}</a>
+            <a href="https://github.com/Ghosty-s-Lab-Inc" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors font-bold uppercase tracking-widest">{t("Footer.developer2")}</a>
           </div>
         </div>
       </div>

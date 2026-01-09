@@ -2,20 +2,11 @@
 
 import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faMagic,
-    faChevronDown,
-    faChevronUp,
-    faList,
-    faPaperPlane,
-    faLightbulb,
-    faCopy,
-    faCheck,
-    faTimes
-} from "@fortawesome/free-solid-svg-icons";
+import { faMagic, faChevronDown, faChevronUp, faList, faPaperPlane, faLightbulb, faCopy, faCheck, faTimes, faLanguage, faGlobe } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 import ReactMarkdown from "react-markdown";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 interface AIToolsProps {
     content: string;
@@ -33,11 +24,12 @@ const SparklesSVG = ({ className = "w-5 h-5" }: { className?: string }) => (
 );
 
 export default function AITools({ content, showBanner = false, publishDate, authorName }: AIToolsProps) {
+    const { t, locale } = useTranslation();
     const [result, setResult] = useState<string | null>(null);
     const [chatHistory, setChatHistory] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const [activeType, setActiveType] = useState<"summary" | "explain" | "takeaways" | "ask" | null>(null);
+    const [activeType, setActiveType] = useState<"summary" | "explain" | "takeaways" | "ask" | "translate" | null>(null);
     const [question, setQuestion] = useState("");
     const [isCopied, setIsCopied] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
@@ -68,11 +60,11 @@ export default function AITools({ content, showBanner = false, publishDate, auth
         if (!text) return;
         navigator.clipboard.writeText(text);
         setIsCopied(true);
-        toast.success("Copied to clipboard!");
+        toast.success(t("Common.loading") === "Loading..." ? "Copied to clipboard!" : "Copié dans le presse-papier !");
         setTimeout(() => setIsCopied(false), 2000);
     };
 
-    const handleAIAction = async (type: "summary" | "explain" | "takeaways" | "ask") => {
+    const handleAIAction = async (type: "summary" | "explain" | "takeaways" | "ask" | "translate") => {
         if (!content) {
             toast.error("Post content is empty.");
             return;
@@ -107,6 +99,7 @@ export default function AITools({ content, showBanner = false, publishDate, auth
                     type,
                     publishDate,
                     authorName,
+                    targetLanguage: locale === 'fr' ? 'French' : 'English',
                     question: type === "ask" ? currentQuestion : undefined,
                     history: type === "ask" ? chatHistory : undefined
                 }),
@@ -178,19 +171,30 @@ export default function AITools({ content, showBanner = false, publishDate, auth
                                 <SparklesSVG className="w-6 h-6 animate-pulse" />
                             </div>
                             <div>
-                                <h4 className="text-base font-bold text-gray-900 dark:text-white">Ask Aria</h4>
+                                <h4 className="text-base font-bold text-gray-900 dark:text-white">{t("Navbar.askAria")}</h4>
                                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Have questions? Ask the Engine Blog AI Assistant in real-time.</p>
                             </div>
                         </div>
-                        <button
-                            onClick={() => setIsOpen(true)}
-                            className="group relative w-full sm:w-auto overflow-hidden rounded-xl bg-blue-600 px-6 py-3 transition-all hover:bg-blue-700 active:scale-95 shadow-md shadow-blue-500/20"
-                        >
-                            <span className="relative z-10 flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest text-white">
-                                <FontAwesomeIcon icon={faMagic} className="group-hover:rotate-12 transition-transform" />
-                                Start AI Chat
-                            </span>
-                        </button>
+                        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                            <button
+                                onClick={() => handleAIAction("translate")}
+                                className="group relative overflow-hidden rounded-xl bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-900 px-6 py-3 transition-all hover:bg-blue-50 dark:hover:bg-blue-900/20 active:scale-95 shadow-sm"
+                            >
+                                <span className="relative z-10 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">
+                                    <FontAwesomeIcon icon={faGlobe} className="group-hover:rotate-12 transition-transform" />
+                                    {t("Common.translate")}
+                                </span>
+                            </button>
+                            <button
+                                onClick={() => setIsOpen(true)}
+                                className="group relative overflow-hidden rounded-xl bg-blue-600 px-6 py-3 transition-all hover:bg-blue-700 active:scale-95 shadow-md shadow-blue-500/20"
+                            >
+                                <span className="relative z-10 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-white">
+                                    <FontAwesomeIcon icon={faMagic} className="group-hover:rotate-12 transition-transform" />
+                                    Start AI Chat
+                                </span>
+                            </button>
+                        </div>
                     </div>
                 </motion.div>
             )}
@@ -250,6 +254,14 @@ export default function AITools({ content, showBanner = false, publishDate, auth
 
                         {/* Quick Actions Scroll */}
                         <div className="flex items-center gap-2 p-3 overflow-x-auto no-scrollbar border-b border-gray-100 dark:border-gray-800">
+                            <button
+                                onClick={() => handleAIAction("translate")}
+                                disabled={isLoading || isTyping}
+                                className="flex-none flex items-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-widest bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all disabled:opacity-50 shadow-sm"
+                            >
+                                <FontAwesomeIcon icon={faGlobe} />
+                                {t("Common.translate")}
+                            </button>
                             <button
                                 onClick={() => handleAIAction("summary")}
                                 disabled={isLoading || isTyping}

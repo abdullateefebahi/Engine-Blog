@@ -1,0 +1,82 @@
+{
+    "Navbar": {
+        "home": "Home",
+        "categories": "Categories",
+        "events": "Events",
+        "notices": "Notices",
+        "credits": "Credits",
+        "about": "About",
+        "signIn": "Sign In",
+        "signUp": "Sign Up",
+        "signOut": "Sign Out",
+        "savedPosts": "Saved Posts",
+        "searchPlaceholder": "Search articles, users...",
+        "askAria": "Ask Aria"
+    },
+    "Footer": {
+        "description": "The official digital hub for the Faculty of Engineering at the University of Benin. Bridging the gap between engineering excellence and student life.",
+        "explore": "Explore",
+        "legal": "Legal",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "guidelines": "Community Guidelines",
+        "copyright": "© {year} Engine Blog.",
+        "developer1": "Ohio Codespace",
+        "developer2": "Ghosty's Lab Technology",
+        "language": "Language"
+    },
+    "Search": {
+        "trigger": "Search articles and people...",
+        "placeholder": "Search people, articles, or updates...",
+        "people": "People",
+        "articles": "Articles",
+        "noResults": "No results found for \"{query}\"",
+        "quickActions": "Quick Actions",
+        "viewProfile": "View Profile",
+        "savedPosts": "Bookmarked Posts",
+        "navigate": "Navigate",
+        "select": "Select",
+        "close": "Close"
+    },
+    "Home": {
+        "title": "UNIBEN Engine Blog",
+        "subtitle": "Your source for academic updates, engineering insights, and campus news from the University of Benin.",
+        "all": "All",
+        "users": "Users",
+        "articles": "Articles",
+        "noArticles": "No articles found",
+        "noResults": "No results found",
+        "tryAdjusting": "Try adjusting your search query."
+    },
+    "Sidebar": {
+        "myCollection": "My Collection",
+        "collectionDesc": "Access all the articles and insights you've saved for later.",
+        "viewSaved": "View Saved Posts",
+        "search": "Search",
+        "latestNotices": "Latest Notices",
+        "seeAllNotices": "See all notices",
+        "upcomingEvents": "Upcoming Events",
+        "viewCalendar": "View event calendar",
+        "trendingNow": "Trending Now",
+        "categories": "Categories",
+        "latestPosts": "Latest Posts",
+        "quickLinks": "Quick Links",
+        "unibenWebsite": "UNIBEN Website",
+        "unibenPortal": "Uniben Student Portal",
+        "johnHarrisLibrary": "John Harris Library"
+    },
+    "Article": {
+        "share": "Share this article",
+        "related": "Related Posts",
+        "author": "Author",
+        "published": "Published on",
+        "translatePrompt": "Translate with Aria"
+    },
+    "Common": {
+        "loading": "Loading...",
+        "noResults": "No results found",
+        "readMore": "Read More",
+        "back": "Back",
+        "translate": "Translate"
+    }
+}

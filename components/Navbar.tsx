@@ -11,6 +11,7 @@ import { faHome, faCalendarDays, faLayerGroup, faBell, faInfoCircle, faCalendarD
 import ThemeToggle from "./ThemeToggle";
 import CommandPalette from "./CommandPalette";
 import { useUser, SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -20,6 +21,7 @@ export default function Navbar() {
   const { signOut } = useClerk();
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useTranslation();
 
   useEffect(() => {
     getAllCategories().then(setCategories);
@@ -54,13 +56,13 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1 xl:gap-2">
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/events">Events</NavLink>
+            <NavLink href="/">{t("Navbar.home")}</NavLink>
+            <NavLink href="/events">{t("Navbar.events")}</NavLink>
 
             {/* Categories Dropdown */}
             <div className="relative group">
               <button className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-1 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                Categories
+                {t("Navbar.categories")}
                 <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -80,8 +82,8 @@ export default function Navbar() {
             </div>
 
             <div className="hidden xl:flex items-center gap-1">
-              <NavLink href="/notices">Notices</NavLink>
-              <NavLink href="/about">About</NavLink>
+              <NavLink href="/notices">{t("Navbar.notices")}</NavLink>
+              <NavLink href="/about">{t("Navbar.about")}</NavLink>
             </div>
 
             {/* Search integrated here */}
@@ -115,7 +117,7 @@ export default function Navbar() {
                 <SignedOut>
                   <Link href="/sign-in">
                     <button className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-full transition-all shadow-lg hover:shadow-blue-500/20 active:scale-95">
-                      Sign In
+                      {t("Navbar.signIn")}
                     </button>
                   </Link>
                 </SignedOut>
@@ -191,20 +193,20 @@ export default function Navbar() {
                   className="flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-bold text-xs uppercase tracking-widest rounded-xl transition-all active:scale-95"
                 >
                   <FontAwesomeIcon icon={faSignOut} />
-                  <span>Sign Out</span>
+                  <span>{t("Navbar.signOut") || "Sign Out"}</span>
                 </button>
               </div>
               <div className="px-3">
                 <MobileNavLink href="/bookmarks" onClick={() => setOpen(false)}>
-                  <FontAwesomeIcon icon={faBookmark} size="lg" /> Saved Posts
+                  <FontAwesomeIcon icon={faBookmark} size="lg" /> {t("Navbar.savedPosts") || "Saved Posts"}
                 </MobileNavLink>
               </div>
             </div>
           </SignedIn>
 
           <div className={`space-y-1 transition-all duration-700 delay-200 ${open ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <MobileNavLink href="/" onClick={() => setOpen(false)}><FontAwesomeIcon icon={faHome} size="lg" /> Home</MobileNavLink>
-            <MobileNavLink href="/events" onClick={() => setOpen(false)}><FontAwesomeIcon icon={faCalendarDay} size="lg" /> Events</MobileNavLink>
+            <MobileNavLink href="/" onClick={() => setOpen(false)}><FontAwesomeIcon icon={faHome} size="lg" /> {t("Navbar.home")}</MobileNavLink>
+            <MobileNavLink href="/events" onClick={() => setOpen(false)}><FontAwesomeIcon icon={faCalendarDay} size="lg" /> {t("Navbar.events")}</MobileNavLink>
 
             {/* Mobile Categories */}
             <div className="py-1">
@@ -214,7 +216,7 @@ export default function Navbar() {
               >
                 <div className="flex items-center gap-3">
                   <FontAwesomeIcon icon={faLayerGroup} className="w-5" />
-                  <span>Categories</span>
+                  <span>{t("Navbar.categories")}</span>
                 </div>
                 <svg className={`w-4 h-4 transition-transform duration-300 ${mobileCatOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
@@ -234,8 +236,8 @@ export default function Navbar() {
               </div>
             </div>
 
-            <MobileNavLink href="/notices" onClick={() => setOpen(false)}><FontAwesomeIcon icon={faBell} size="lg" />Notices</MobileNavLink>
-            <MobileNavLink href="/about" onClick={() => setOpen(false)}><FontAwesomeIcon icon={faInfoCircle} size="lg" />About</MobileNavLink>
+            <MobileNavLink href="/notices" onClick={() => setOpen(false)}><FontAwesomeIcon icon={faBell} size="lg" />{t("Navbar.notices")}</MobileNavLink>
+            <MobileNavLink href="/about" onClick={() => setOpen(false)}><FontAwesomeIcon icon={faInfoCircle} size="lg" />{t("Navbar.about")}</MobileNavLink>
           </div>
 
           <SignedOut>
@@ -243,7 +245,7 @@ export default function Navbar() {
               <Link href="/sign-in" onClick={() => setOpen(false)}>
                 <button className="flex items-center justify-center gap-3 w-full py-4 bg-blue-600 hover:bg-blue-700 text-white text-center text-sm font-black uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg active:scale-[0.98]">
                   <FontAwesomeIcon icon={faSignIn} className="w-5" />
-                  <span>Sign In</span>
+                  <span>{t("Navbar.signIn")}</span>
                 </button>
               </Link>
             </div>

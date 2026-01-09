@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { searchPosts } from "@/lib/posts";
 import { searchProfiles } from "@/lib/profiles";
 import Image from "next/image";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 export default function CommandPalette() {
     const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +17,7 @@ export default function CommandPalette() {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const router = useRouter();
+    const { t } = useTranslation();
     const inputRef = useRef<HTMLInputElement>(null);
 
     // Toggle palette on Ctrl+K or Cmd+K
@@ -103,7 +105,7 @@ export default function CommandPalette() {
                 className="hidden md:flex items-center gap-2 xl:gap-3 px-2 xl:px-4 py-2 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-500 dark:text-gray-400 transition-all group max-w-[120px] xl:max-w-[280px]"
             >
                 <FontAwesomeIcon icon={faSearch} className="text-sm group-hover:text-blue-500 shrink-0" />
-                <span className="text-sm font-medium truncate hidden xl:inline">Search articles and people...</span>
+                <span className="text-sm font-medium truncate hidden xl:inline">{t("Search.trigger")}</span>
                 <div className="hidden lg:flex items-center gap-1 ml-auto py-0.5 px-1.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded text-[10px] font-bold shrink-0">
                     <span className="text-[12px]">⌘</span>K
                 </div>
@@ -147,7 +149,7 @@ export default function CommandPalette() {
                                 <input
                                     ref={inputRef}
                                     type="text"
-                                    placeholder="Search people, articles, or updates..."
+                                    placeholder={t("Search.placeholder")}
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
                                     className="flex-grow bg-transparent border-none outline-none text-lg text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
@@ -168,7 +170,7 @@ export default function CommandPalette() {
                                         {results.profiles.length > 0 && (
                                             <div className="space-y-1">
                                                 <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">
-                                                    People
+                                                    {t("Search.people")}
                                                 </p>
                                                 {results.profiles.map((profile, index) => (
                                                     <div
@@ -201,7 +203,7 @@ export default function CommandPalette() {
                                         {results.posts.length > 0 && (
                                             <div className="space-y-1">
                                                 <p className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">
-                                                    Articles
+                                                    {t("Search.articles")}
                                                 </p>
                                                 {results.posts.map((post, index) => {
                                                     const actualIndex = index + results.profiles.length;
@@ -251,42 +253,42 @@ export default function CommandPalette() {
                                         <div className="w-16 h-16 bg-gray-50 dark:bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
                                             <FontAwesomeIcon icon={faSearch} className="text-2xl text-gray-300" />
                                         </div>
-                                        <p className="text-gray-500 dark:text-gray-400 font-medium font-sans">No results found for "{query}"</p>
+                                        <p className="text-gray-500 dark:text-gray-400 font-medium font-sans">{t("Search.noResults", { query })}</p>
                                     </div>
                                 ) : !query && (
                                     <div className="p-4 space-y-6">
                                         <div className="space-y-3">
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Quick Actions</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">{t("Search.quickActions")}</p>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                                 <button onClick={() => { router.push('/profile'); setIsOpen(false) }} className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left group">
                                                     <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-all">
                                                         <FontAwesomeIcon icon={faKeyboard} className="text-sm" />
                                                     </div>
-                                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-300">View Profile</span>
+                                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{t("Search.viewProfile")}</span>
                                                 </button>
                                                 <button onClick={() => { router.push('/bookmarks'); setIsOpen(false) }} className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left group">
                                                     <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
                                                         <FontAwesomeIcon icon={faFileAlt} className="text-sm" />
                                                     </div>
-                                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-300">Bookmarked Posts</span>
+                                                    <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{t("Search.savedPosts")}</span>
                                                 </button>
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-center gap-6 py-4 border-t border-gray-100 dark:border-gray-800">
                                             <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400">
                                                 <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 text-gray-500">↑↓</span>
-                                                Navigate
+                                                {t("Search.navigate")}
                                             </div>
                                             <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400">
                                                 <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 text-gray-500 flex items-center gap-1">
                                                     <FontAwesomeIcon icon={faSearch} className="text-[8px]" />
                                                     ENTER
                                                 </span>
-                                                Select
+                                                {t("Search.select")}
                                             </div>
                                             <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400">
                                                 <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 text-gray-500">ESC</span>
-                                                Close
+                                                {t("Search.close")}
                                             </div>
                                         </div>
                                     </div>

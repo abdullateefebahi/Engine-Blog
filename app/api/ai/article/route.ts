@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 const HF_API_KEY = process.env.HF_API_KEY!;
 
 export async function POST(req: Request) {
-    const { content, type, question, history, publishDate, authorName } = await req.json();
+    const { content, type, question, history, publishDate, authorName, targetLanguage } = await req.json();
 
     const model = "meta-llama/Llama-3.2-3B-Instruct";
 
@@ -50,6 +50,8 @@ Please answer my questions based on both the article content and the metadata pr
             userPrompt = `Please explain the key concepts of this article in very simple, easy-to-understand terms for a non-technical reader. Respond with the explanation only, do not include any introductory phrases:\n\n${content}`;
         } else if (type === "takeaways") {
             userPrompt = `Please extract the most important 3-5 key takeaways from this article as a bulleted list. Respond with the list only, do not include any introductory phrases:\n\n${content}`;
+        } else if (type === "translate") {
+            userPrompt = `Please translate the following article content into ${targetLanguage || "English"}. Respond with the translation only, do not include any introductory phrases:\n\n${content}`;
         }
 
         messages.push({

@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import SearchInput from "./SearchInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faBell, faLayerGroup, faNewspaper, faLink, faCalendarDays, faFire, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { SignedIn } from "@clerk/nextjs";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 export default function Sidebar({
     categories,
@@ -17,6 +20,8 @@ export default function Sidebar({
     notices?: any[];
     events?: any[];
 }) {
+    const { t } = useTranslation();
+
     return (
         <aside className="space-y-8">
             {/* Saved Posts - Quick Access */}
@@ -30,16 +35,16 @@ export default function Sidebar({
 
                     <h3 className="text-lg font-bold mb-2 flex items-center gap-3 relative z-10">
                         <FontAwesomeIcon icon={faBookmark} className="text-white/90" />
-                        <span>My Collection</span>
+                        <span>{t("Sidebar.myCollection")}</span>
                     </h3>
                     <p className="text-xs text-white/70 mb-4 relative z-10 leading-relaxed">
-                        Access all the articles and insights you've saved for later.
+                        {t("Sidebar.collectionDesc")}
                     </p>
                     <Link
                         href="/bookmarks"
                         className="inline-flex items-center justify-center w-full py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 relative z-10 border border-white/10"
                     >
-                        View Saved Posts
+                        {t("Sidebar.viewSaved")}
                     </Link>
                 </section>
             </SignedIn>
@@ -48,7 +53,7 @@ export default function Sidebar({
             <section className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm border border-gray-100 dark:border-gray-700 font-sans">
                 <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-3">
                     <FontAwesomeIcon icon={faSearch} className="text-blue-600 w-5" fixedWidth />
-                    <span>Search</span>
+                    <span>{t("Sidebar.search")}</span>
                 </h3>
                 <SearchInput />
             </section>
@@ -58,7 +63,7 @@ export default function Sidebar({
                 <section className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border-l-4 border-red-500">
                     <h3 className="text-lg font-bold mb-4 flex items-center gap-3 text-gray-900 dark:text-white">
                         <FontAwesomeIcon icon={faBell} className="text-red-500 w-5" fixedWidth />
-                        <span>Latest Notices</span>
+                        <span>{t("Sidebar.latestNotices")}</span>
                     </h3>
                     <ul className="space-y-3">
                         {notices.map((notice) => (
@@ -77,7 +82,7 @@ export default function Sidebar({
                             href="/notices"
                             className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
                         >
-                            See all notices
+                            {t("Sidebar.seeAllNotices")}
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
@@ -91,7 +96,7 @@ export default function Sidebar({
                 <section className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
                     <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-3">
                         <FontAwesomeIcon icon={faCalendarDays} className="text-blue-600 w-5" fixedWidth />
-                        <span>Upcoming Events</span>
+                        <span>{t("Sidebar.upcomingEvents")}</span>
                     </h3>
                     <div className="space-y-4">
                         {events.map((event) => (
@@ -124,7 +129,7 @@ export default function Sidebar({
                             href="/events"
                             className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
                         >
-                            View event calendar
+                            {t("Sidebar.viewCalendar")}
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
@@ -138,7 +143,7 @@ export default function Sidebar({
                 <section className="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-100 dark:border-gray-700">
                     <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-3">
                         <FontAwesomeIcon icon={faFire} className="text-orange-500 w-5" fixedWidth />
-                        <span>Trending Now</span>
+                        <span>{t("Sidebar.trendingNow")}</span>
                     </h3>
                     <div className="space-y-4">
                         {trendingPosts.map((post, index) => (
@@ -173,7 +178,7 @@ export default function Sidebar({
             <section className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm border border-gray-100 dark:border-gray-700">
                 <h3 className="text-lg font-bold mb-4 flex items-center gap-3 text-gray-900 dark:text-white">
                     <FontAwesomeIcon icon={faLayerGroup} className="text-blue-600 w-5" fixedWidth />
-                    <span>Categories</span>
+                    <span>{t("Sidebar.categories")}</span>
                 </h3>
                 <ul className="space-y-2">
                     <li>
@@ -181,7 +186,7 @@ export default function Sidebar({
                             href="/"
                             className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600"
                         >
-                            All
+                            {t("Home.all")}
                         </Link>
                     </li>
 
@@ -202,7 +207,7 @@ export default function Sidebar({
             <section className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm border border-gray-100 dark:border-gray-700">
                 <h3 className="text-lg font-bold mb-4 flex items-center gap-3 text-gray-900 dark:text-white">
                     <FontAwesomeIcon icon={faNewspaper} className="text-blue-600 w-5" fixedWidth />
-                    <span>Latest Posts</span>
+                    <span>{t("Sidebar.latestPosts")}</span>
                 </h3>
                 <ul className="space-y-3">
                     {latestPosts.slice(0, 5).map((post) => (
@@ -222,7 +227,7 @@ export default function Sidebar({
             <section className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm border border-gray-100 dark:border-gray-700">
                 <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-3">
                     <FontAwesomeIcon icon={faLink} className="text-blue-600 w-5" fixedWidth />
-                    <span>Quick Links</span>
+                    <span>{t("Sidebar.quickLinks")}</span>
                 </h3>
                 <ul className="space-y-3">
                     <li>
@@ -232,7 +237,7 @@ export default function Sidebar({
                             rel="noopener noreferrer"
                             className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 flex items-center gap-2 group"
                         >
-                            <span>UNIBEN Website</span>
+                            <span>{t("Sidebar.unibenWebsite")}</span>
                             <svg className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>
@@ -245,7 +250,7 @@ export default function Sidebar({
                             rel="noopener noreferrer"
                             className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 flex items-center gap-2 group"
                         >
-                            <span>Uniben Student Portal</span>
+                            <span>{t("Sidebar.unibenPortal")}</span>
                             <svg className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>
@@ -258,7 +263,7 @@ export default function Sidebar({
                             rel="noopener noreferrer"
                             className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 flex items-center gap-2 group"
                         >
-                            <span>John Harris Library</span>
+                            <span>{t("Sidebar.johnHarrisLibrary")}</span>
                             <svg className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>
@@ -269,3 +274,4 @@ export default function Sidebar({
         </aside>
     );
 }
+

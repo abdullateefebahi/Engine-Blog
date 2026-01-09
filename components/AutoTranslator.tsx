@@ -13,28 +13,56 @@ const AutoTranslator = () => {
     useEffect(() => {
         if (!isMounted) return;
 
-        // Define the callback for Google Translate
+        // 1. Define the callback for Google Translate
         (window as any).googleTranslateElementInit = () => {
             new (window as any).google.translate.TranslateElement(
                 {
                     pageLanguage: "en",
-                    // Including common languages for the UNIBEN/African context and global reach
                     includedLanguages: "en,fr,es,de,pt,ar,zh-CN,hi,yo,ig,ha",
                     autoDisplay: false,
                 },
-                "google_translate_element"
+                "google_translate_hidden"
             );
         };
 
+        // 2. Setup Observation to hide legacy UI elements aggressively
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node: any) => {
+                    // Hide the top bar and popups
+                    if (node.id === "goog-gt-tt" || node.className?.includes("goog-te-banner-frame")) {
+                        node.style.setProperty('display', 'none', 'important');
+                    }
+                    if (node.className?.includes("skiptranslate") && node.id !== "google_translate_hidden") {
+                        node.style.setProperty('display', 'none', 'important');
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // 3. Sync listener for our custom footer UI
+        const handleTranslateEvent = (e: any) => {
+            const targetLang = e.detail;
+            const selectField = document.querySelector(".goog-te-combo") as HTMLSelectElement;
+            if (selectField) {
+                selectField.value = targetLang;
+                selectField.dispatchEvent(new Event("change"));
+            }
+        };
+
+        window.addEventListener("translate-to", handleTranslateEvent);
+
+        // 4. Auto-detection logic (still active)
         const detectAndTranslate = async () => {
             try {
-                const userLang = (navigator.language || (navigator as any).userLanguage).split('-')[0].toLowerCase();
-
-                // Supported languages excluding English
+                const languages = (navigator.languages || [navigator.language]).map(l => l.split('-')[0].toLowerCase());
                 const supportedLanguages = ["fr", "es", "de", "pt", "ar", "zh", "hi", "yo", "ig", "ha"];
+                const preferredLang = languages.find(lang => supportedLanguages.includes(lang));
 
-                if (supportedLanguages.includes(userLang) || (userLang === "zh-cn" || userLang === "zh")) {
-                    const targetLang = userLang.startsWith("zh") ? "zh-CN" : userLang;
+                if (preferredLang) {
+                    const targetLang = preferredLang === "zh" ? "zh-CN" : preferredLang;
 
                     const checkTranslate = setInterval(() => {
                         const selectField = document.querySelector(".goog-te-combo") as HTMLSelectElement;
@@ -43,12 +71,13 @@ const AutoTranslator = () => {
                             if (selectField.value !== targetLang) {
                                 selectField.value = targetLang;
                                 selectField.dispatchEvent(new Event("change"));
+                                // Dispatch event to update our footer UI state too
+                                window.dispatchEvent(new CustomEvent("translate-updated", { detail: targetLang }));
                             }
                         }
                     }, 500);
 
-                    // Timeout after 10 seconds to stop checking
-                    setTimeout(() => clearInterval(checkTranslate), 10000);
+                    setTimeout(() => clearInterval(checkTranslate), 15000);
                 }
             } catch (err) {
                 console.error("Translation detection error:", err);
@@ -56,83 +85,48 @@ const AutoTranslator = () => {
         };
 
         detectAndTranslate();
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener("translate-to", handleTranslateEvent);
+        };
     }, [isMounted]);
 
     if (!isMounted) return null;
 
     return (
         <>
+            {/* The real google translate gadget, completely hidden */}
+            <div id="google_translate_hidden" style={{ display: 'none', position: 'fixed', top: -100, left: -100 }}></div>
+
             <Script
                 id="google-translate-script"
                 src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
                 strategy="afterInteractive"
             />
-            <style
-                dangerouslySetInnerHTML={{
-                    __html: `
-        /* Hide unwanted Google Translate UI elements */
-        iframe.goog-te-banner-frame,
-        #goog-gt-tt,
-        .goog-te-balloon-frame,
-        .goog-te-banner-frame.skiptranslate {
-          display: none !important;
-          visibility: hidden !important;
-          opacity: 0 !important;
-        }
 
-        body {
-          top: 0 !important;
-          position: relative !important;
-        }
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                /* Final blow to the Google Bar */
+                .goog-te-banner-frame,
+                .goog-te-banner,
+                #goog-gt-tt,
+                .goog-te-balloon-frame,
+                .goog-tooltip,
+                .goog-tooltip:hover,
+                .goog-te-spinner-pos,
+                .skiptranslate:not(#google_translate_hidden) {
+                    display: none !important;
+                    visibility: hidden !important;
+                    opacity: 0 !important;
+                }
 
-        /* Prevent shifting */
-        body {
-            top: 0px !important; 
-        }
-
-        /* Style the dropdown to match the site's aesthetic */
-        .google-translate-container {
-            display: inline-block;
-        }
-
-        /* The actual select element generated by Google */
-        .goog-te-combo {
-            padding: 8px 12px !important;
-            border-radius: 10px !important;
-            background-color: transparent !important;
-            border: 1px solid #e5e7eb !important; /* light gray border */
-            color: #4b5563 !important; /* text gray */
-            font-size: 12px !important;
-            font-weight: 600 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.05em !important;
-            outline: none !important;
-            transition: all 0.2s ease !important;
-            cursor: pointer !important;
-        }
-
-        .dark .goog-te-combo {
-            background-color: #030712 !important; /* gray-950 */
-            border-color: #111827 !important; /* gray-900 or similar */
-            color: #9ca3af !important; /* gray-400 */
-        }
-
-        .goog-te-combo:hover {
-            border-color: #2563eb !important; /* blue-600 */
-        }
-
-        /* Hide the "Powered by Google Translate" branding if desired for a cleaner look */
-        .goog-logo-link, .goog-te-gadget span {
-            display: none !important;
-        }
-        
-        .goog-te-gadget {
-            font-size: 0 !important;
-            color: transparent !important;
-        }
-      `,
-                }}
-            />
+                body {
+                    top: 0 !important;
+                    position: static !important;
+                    margin-top: 0 !important;
+                }
+            `}} />
         </>
     );
 };

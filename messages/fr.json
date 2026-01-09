@@ -1,0 +1,82 @@
+{
+    "Navbar": {
+        "home": "Accueil",
+        "categories": "Catégories",
+        "events": "Événements",
+        "notices": "Avis",
+        "credits": "Crédits",
+        "about": "À propos",
+        "signIn": "Se connecter",
+        "signUp": "S'inscrire",
+        "signOut": "Déconnexion",
+        "savedPosts": "Articles enregistrés",
+        "searchPlaceholder": "Rechercher des articles, des utilisateurs...",
+        "askAria": "Demander à Aria"
+    },
+    "Footer": {
+        "description": "Le centre numérique officiel de la Faculté d'Ingénierie de l'Université du Bénin. Faire le pont entre l'excellence en ingénierie et la vie étudiante.",
+        "explore": "Explorer",
+        "legal": "Mentions Légales",
+        "terms": "Conditions d'utilisation",
+        "privacy": "Politique de confidentialité",
+        "guidelines": "Règles communautaires",
+        "copyright": "© {year} Engine Blog.",
+        "developer1": "Ohio Codespace",
+        "developer2": "Ghosty's Lab Technology",
+        "language": "Langue"
+    },
+    "Search": {
+        "trigger": "Rechercher des articles et des personnes...",
+        "placeholder": "Rechercher des personnes, des articles ou des mises à jour...",
+        "people": "Personnes",
+        "articles": "Articles",
+        "noResults": "Aucun résultat trouvé pour \"{query}\"",
+        "quickActions": "Actions rapides",
+        "viewProfile": "Voir le profil",
+        "savedPosts": "Articles favoris",
+        "navigate": "Naviguer",
+        "select": "Sélectionner",
+        "close": "Fermer"
+    },
+    "Home": {
+        "title": "Blog de l'Ingénierie UNIBEN",
+        "subtitle": "Votre source de mises à jour académiques, d'aperçus en ingénierie et de nouvelles du campus de l'Université du Bénin.",
+        "all": "Tout",
+        "users": "Utilisateurs",
+        "articles": "Articles",
+        "noArticles": "Aucun article trouvé",
+        "noResults": "Aucun résultat trouvé",
+        "tryAdjusting": "Essayez d'ajuster votre requête de recherche."
+    },
+    "Sidebar": {
+        "myCollection": "Ma Collection",
+        "collectionDesc": "Accédez à tous les articles et aperçus que vous avez enregistrés pour plus tard.",
+        "viewSaved": "Voir les articles enregistrés",
+        "search": "Rechercher",
+        "latestNotices": "Derniers avis",
+        "seeAllNotices": "Voir tous les avis",
+        "upcomingEvents": "Événements à venir",
+        "viewCalendar": "Voir le calendrier des événements",
+        "trendingNow": "Tendances actuelles",
+        "categories": "Catégories",
+        "latestPosts": "Derniers articles",
+        "quickLinks": "Liens rapides",
+        "unibenWebsite": "Site web de l'UNIBEN",
+        "unibenPortal": "Portail étudiant Uniben",
+        "johnHarrisLibrary": "Bibliothèque John Harris"
+    },
+    "Article": {
+        "share": "Partager cet article",
+        "related": "Articles connexes",
+        "author": "Auteur",
+        "published": "Publié le",
+        "translatePrompt": "Traduire avec Aria"
+    },
+    "Common": {
+        "loading": "Chargement...",
+        "noResults": "Aucun résultat trouvé",
+        "readMore": "Lire la suite",
+        "back": "Retour",
+        "translate": "Traduire"
+    }
+}

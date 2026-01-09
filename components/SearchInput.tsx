@@ -3,8 +3,10 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { logAnalyticsEvent } from "@/lib/firebase";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 export default function SearchInput() {
+    const { t } = useTranslation();
     const router = useRouter();
     const searchParams = useSearchParams();
     const [query, setQuery] = useState(searchParams.get("q") || "");
@@ -37,7 +39,7 @@ export default function SearchInput() {
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search articles and people..."
+                    placeholder={t("Search.trigger")}
                     className="w-full px-5 py-3 pl-12 pr-12 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all dark:text-white"
                 />
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors">
@@ -64,3 +66,4 @@ export default function SearchInput() {
         </form>
     );
 }
+
