@@ -25,17 +25,16 @@ export default function QuickReactions({ postSlug }: { postSlug: string }) {
     const { user, isLoaded } = useUser();
 
     useEffect(() => {
-        // Initial user setup
         const setupUser = async () => {
             if (user) {
                 setSessionUserId(user.id);
             } else {
-                let anonId = localStorage.getItem("guestId");
-                if (!anonId) {
+                let anonId = typeof window !== 'undefined' ? localStorage.getItem("guestId") : null;
+                if (!anonId && typeof window !== 'undefined') {
                     anonId = `guest_${Math.random().toString(36).substring(2, 11)}`;
                     localStorage.setItem("guestId", anonId);
                 }
-                setSessionUserId(anonId);
+                setSessionUserId(anonId || "");
             }
             await fetchReactions();
         };
@@ -43,7 +42,9 @@ export default function QuickReactions({ postSlug }: { postSlug: string }) {
         if (isLoaded) {
             setupUser();
         }
+    }, [isLoaded, user, postSlug]);
 
+    useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (pickerRef.current && !pickerRef.current.contains(event.target as Node) &&
                 triggerRef.current && !triggerRef.current.contains(event.target as Node)) {
@@ -57,7 +58,7 @@ export default function QuickReactions({ postSlug }: { postSlug: string }) {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [isLoaded, user, postSlug, showPicker]);
+    }, [showPicker]);
 
     const fetchReactions = async () => {
         const data = await getReactions(postSlug);
@@ -118,6 +119,8 @@ export default function QuickReactions({ postSlug }: { postSlug: string }) {
                 });
                 logAnalyticsEvent('reaction_added', { post_slug: postSlug, reaction: emoji });
             }
+            // Final sync after backend confirmation
+            await fetchReactions();
         } catch (error) {
             console.error("Failed to update reaction:", error);
             fetchReactions();
