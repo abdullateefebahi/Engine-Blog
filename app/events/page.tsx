@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { getAllEvents } from "@/lib/api";
+import { formatDate } from "@/lib/utils";
 
 export const revalidate = 60;
 
@@ -76,10 +77,10 @@ export default async function EventsPage() {
                                     <div className="flex items-center gap-4 mb-6">
                                         <div className="flex flex-col items-center justify-center w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                                             <span className="text-lg font-black leading-none">
-                                                {new Date(event.eventDate).getDate()}
+                                                {formatDate(event.eventDate, { day: 'numeric' })}
                                             </span>
                                             <span className="text-[10px] font-bold uppercase">
-                                                {new Date(event.eventDate).toLocaleString('default', { month: 'short' })}
+                                                {formatDate(event.eventDate, { month: 'short' })}
                                             </span>
                                         </div>
                                         <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -87,7 +88,7 @@ export default async function EventsPage() {
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
-                                                {new Date(event.eventDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {formatDate(event.eventDate, { hour: '2-digit', minute: '2-digit' })}
                                             </div>
                                             <div className="flex items-center gap-1.5 line-clamp-1">
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

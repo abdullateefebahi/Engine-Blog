@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faBell, faLayerGroup, faNewspaper, faLink, faCalendarDays, faFire, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { SignedIn } from "@clerk/nextjs";
 import { useTranslation } from "@/contexts/TranslationContext";
+import { formatDate } from "@/lib/utils";
 
 export default function Sidebar({
     categories,
@@ -107,10 +108,10 @@ export default function Sidebar({
                             >
                                 <div className="flex flex-col items-center justify-center w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex-shrink-0">
                                     <span className="text-xs font-black leading-none">
-                                        {new Date(event.eventDate).getDate()}
+                                        {formatDate(event.eventDate, { day: 'numeric' })}
                                     </span>
                                     <span className="text-[8px] font-bold uppercase">
-                                        {new Date(event.eventDate).toLocaleString('default', { month: 'short' })}
+                                        {formatDate(event.eventDate, { month: 'short' })}
                                     </span>
                                 </div>
                                 <div className="space-y-1">

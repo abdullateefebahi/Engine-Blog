@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { getAllNotices } from "@/lib/api";
+import { formatDate } from "@/lib/utils";
 
 export const revalidate = 60;
 
@@ -50,7 +51,7 @@ export default async function NoticesPage() {
                                                 Important
                                             </span>
                                             <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">
-                                                {new Date(notice.publishedAt).toLocaleDateString("en-US", {
+                                                {formatDate(notice.publishedAt, {
                                                     month: "long",
                                                     day: "numeric",
                                                     year: "numeric"

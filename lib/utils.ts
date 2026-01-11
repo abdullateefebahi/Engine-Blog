@@ -16,3 +16,14 @@ export function portableTextToPlainText(blocks: any[] = []) {
         })
         .join("\n\n");
 }
+
+export function formatDate(date: string | Date, options: Intl.DateTimeFormatOptions = {}) {
+    try {
+        return new Date(date).toLocaleString("en-US", {
+            timeZone: "Africa/Lagos",
+            ...options,
+        });
+    } catch (e) {
+        return new Date(date).toLocaleString("en-US", options);
+    }
+}
