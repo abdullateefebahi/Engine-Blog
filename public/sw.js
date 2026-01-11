@@ -1,4 +1,4 @@
-const CACHE_NAME = 'engine-blog-v1';
+const CACHE_NAME = 'engine-blog-v2';
 const ASSETS_TO_CACHE = [
     '/',
     '/icon.png',
@@ -29,34 +29,34 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // Only cache GET requests
+    // Only handle GET requests
     if (event.request.method !== 'GET') return;
 
+    // Skip Sanity Studio and other internal routes if needed
+    const url = new URL(event.request.url);
+    if (url.pathname.startsWith('/studio') || url.pathname.startsWith('/api')) {
+        return;
+    }
+
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                return cachedResponse;
-            }
-
-            return fetch(event.request).then((networkResponse) => {
-                // Only cache successful responses and skip third-party requests (unless needed)
+        fetch(event.request)
+            .then((networkResponse) => {
+                // If it's a valid response, cache it and return it
                 if (
-                    !networkResponse ||
-                    networkResponse.status !== 200 ||
-                    networkResponse.type !== 'basic'
+                    networkResponse &&
+                    networkResponse.status === 200 &&
+                    networkResponse.type === 'basic'
                 ) {
-                    return networkResponse;
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
                 }
-
-                const responseToCache = networkResponse.clone();
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, responseToCache);
-                });
-
                 return networkResponse;
-            });
-        }).catch(() => {
-            // Fallback or just let it fail if network is down and not in cache
-        })
+            })
+            .catch(() => {
+                // If network fails, try to get it from cache
+                return caches.match(event.request);
+            })
     );
 });

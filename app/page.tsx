@@ -9,6 +9,8 @@ import { getTrendingPosts, getNotices, getEvents } from "@/lib/api";
 import { searchProfiles } from "@/lib/profiles";
 import HomeClient from "@/components/HomeClient";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Engine Blog",
   description: "Stay updated with the latest news, academic notices, and student life from the Faculty of Engineering, University of Benin.",

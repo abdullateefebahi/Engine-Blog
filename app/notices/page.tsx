@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getAllNotices } from "@/lib/api";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
     title: "Official Notices",
     description: "Stay informed with the latest official announcements and academic updates from the Faculty of Engineering, UNIBEN.",

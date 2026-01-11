@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { getAllPosts, getPost, getRelatedPosts } from "@/lib/posts";
 import PostClient from "@/components/PostClient";
 
-export const dynamic = "force-static";
+export const revalidate = 60;
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;

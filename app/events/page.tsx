@@ -3,6 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAllEvents } from "@/lib/api";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
     title: "Events",
     description: "Discover upcoming academic and social events in the Faculty of Engineering, University of Benin.",
