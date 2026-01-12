@@ -14,7 +14,7 @@ export default function UsernameCheck() {
 
         // If user is logged in but has no username, and is NOT on onboarding page
         if (user && !user.username) {
-            if (pathname !== "/onboarding") {
+            if (pathname !== "/onboarding" && pathname !== "/sso-callback") {
                 router.replace("/onboarding");
             }
         }
