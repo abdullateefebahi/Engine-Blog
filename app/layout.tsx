@@ -93,14 +93,6 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <head>
-          <Script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9880476141412049"
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-          />
-        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
