@@ -126,6 +126,7 @@ export default function RootLayout({
               <Toaster position="bottom-right" />
               <ConnectionStatus />
               {children}
+              <GoogleAdsense />
               <Footer />
               <ScrollToTop />
             </TranslationProvider>
