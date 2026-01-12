@@ -17,7 +17,7 @@ const GoogleAdsense = () => {
         <div className="w-full my-4 overflow-hidden text-center">
             <Script
                 async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7156272331216301"
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9880476141412049"
                 crossOrigin="anonymous"
                 strategy="afterInteractive"
             />
@@ -25,7 +25,7 @@ const GoogleAdsense = () => {
             <ins
                 className="adsbygoogle"
                 style={{ display: "block" }}
-                data-ad-client="ca-pub-7156272331216301"
+                data-ad-client="ca-pub-9880476141412049"
                 data-ad-slot="8356381943"
                 data-ad-format="auto"
                 data-full-width-responsive="true"

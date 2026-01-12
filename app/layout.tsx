@@ -13,6 +13,7 @@ import { Toaster } from "react-hot-toast";
 import ConnectionStatus from "@/components/ConnectionStatus";
 import UsernameCheck from "@/components/UsernameCheck";
 import GoogleAdsense from "@/components/GoogleAdsense";
+import Script from "next/script";
 import { TranslationProvider } from "@/contexts/TranslationContext";
 
 const geistSans = Geist({
@@ -72,7 +73,7 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://engineblog.live"),
   other: {
-    "google-adsense-account": "ca-pub-7156272331216301",
+    "google-adsense-account": "ca-pub-9880476141412049",
   },
 };
 
@@ -92,6 +93,14 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
+        <head>
+          <Script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9880476141412049"
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
