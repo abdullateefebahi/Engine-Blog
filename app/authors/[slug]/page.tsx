@@ -1,4 +1,4 @@
-export const dynamic = "force-static";
+export const revalidate = 60;
 // Force re-save to resolve potential dev server caching issues
 
 import { notFound } from "next/navigation";
