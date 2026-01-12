@@ -1,5 +1,8 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCompass } from "@fortawesome/free-solid-svg-icons";
 import FollowModal from "./FollowModal";
 import FollowButton from "./FollowButton";
 
@@ -54,6 +57,13 @@ export default function ProfileSocial({
                     username={username}
                     initialIsFollowing={initialIsFollowing}
                 />
+                <Link
+                    href="/discover"
+                    className="px-6 py-2 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 font-bold rounded-xl border border-blue-100 dark:border-blue-900/30 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all shadow-sm flex items-center gap-2"
+                >
+                    <FontAwesomeIcon icon={faCompass} className="w-4 h-4" />
+                    Discover
+                </Link>
             </div>
 
             <FollowModal

@@ -31,3 +31,17 @@ export async function getProfileById(id: string) {
 
     return data;
 }
+export async function getProfiles() {
+    const { data, error } = await supabase
+        .from("profiles")
+        .select("id, username, full_name, avatar_url, department")
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+    if (error) {
+        console.error("Error fetching profiles:", error);
+        return [];
+    }
+
+    return data;
+}
