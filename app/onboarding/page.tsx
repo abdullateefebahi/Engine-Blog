@@ -42,8 +42,8 @@ export default function OnboardingPage() {
                         <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
                             Create your Username
                         </h1>
-                        <p className="text-gray-500 dark:text-gray-400 mt-2">
-                            Choose a unique handle to identify yourself on Engine Blog.
+                        <p className="text-center text-gray-600 dark:text-gray-400 mb-8 max-w-sm mx-auto">
+                            Welcome to Engine Blog! Please choose a unique username to continue.
                         </p>
                     </div>
 
@@ -64,14 +64,14 @@ export default function OnboardingPage() {
                                     required
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value.trim())}
-                                    className="w-full pl-8 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full pl-8 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
                                     placeholder="username"
-                                    minLength={3}
+                                    minLength={4}
                                     maxLength={20}
                                 />
                             </div>
-                            <p className="text-xs text-gray-400 mt-2">
-                                3-20 characters, letters, numbers, and underscores only.
+                            <p className="mt-4 text-xs text-center text-gray-600 dark:text-gray-500">
+                                Username must be between 4-20 characters and contain only lowercase letters, numbers, and underscores.
                             </p>
                         </div>
 

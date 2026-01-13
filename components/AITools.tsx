@@ -391,7 +391,7 @@ export default function AITools({ content, showBanner = false, publishDate, auth
                                     onChange={(e) => setQuestion(e.target.value)}
                                     onKeyDown={(e) => e.key === "Enter" && handleAIAction("ask")}
                                     placeholder="Message Aria..."
-                                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 focus:border-blue-500/50 focus:bg-white dark:focus:bg-gray-900 outline-none rounded-2xl px-4 py-3 text-sm transition-all shadow-inner pr-12 text-gray-700 dark:text-gray-200"
+                                    className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 focus:border-blue-500/50 focus:bg-white dark:focus:bg-gray-900 outline-none rounded-2xl px-4 py-3 text-sm transition-all shadow-inner pr-12 text-gray-900 dark:text-gray-200"
                                 />
                                 <button
                                     onClick={() => handleAIAction("ask")}

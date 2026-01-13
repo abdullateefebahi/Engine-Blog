@@ -22,7 +22,7 @@ export async function generateMetadata(props: {
         title: `${author.name} | Engine Blog`,
         description: `Read articles published by ${author.name} on the UNIBEN Engine Blog.`,
     };
-}
+}   
 
 export async function generateStaticParams() {
     const authors = await getAllAuthors();

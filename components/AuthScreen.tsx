@@ -193,7 +193,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                             value={username}
                                             onChange={(e) => setUsername(e.target.value)}
                                             placeholder="johndoe"
-                                            className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white"
+                                            className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
                                             required
                                         />
                                     </div>
@@ -210,7 +210,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                                 value={firstName}
                                                 onChange={(e) => setFirstName(e.target.value)}
                                                 placeholder="John"
-                                                className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white"
+                                                className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
                                                 required
                                             />
                                         </div>
@@ -223,7 +223,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                                 value={lastName}
                                                 onChange={(e) => setLastName(e.target.value)}
                                                 placeholder="Doe"
-                                                className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white"
+                                                className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
                                                 required
                                             />
                                         </div>
@@ -242,7 +242,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="name@example.com"
-                                            className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white"
+                                            className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
                                             required
                                         />
                                     </div>
@@ -270,7 +270,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                                 value={code}
                                                 onChange={(e) => setCode(e.target.value)}
                                                 placeholder="123456"
-                                                className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white text-center text-2xl tracking-[0.5em] font-bold"
+                                                className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white text-center text-2xl tracking-[0.5em] font-bold"
                                                 required
                                                 maxLength={6}
                                             />
@@ -303,7 +303,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                             value={code}
                                             onChange={(e) => setCode(e.target.value)}
                                             placeholder="123456"
-                                            className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white"
+                                            className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
                                             required
                                         />
                                     </div>
@@ -331,7 +331,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 placeholder="••••••••"
-                                                className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all dark:text-white pr-12"
+                                                className="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white pr-12"
                                                 required
                                             />
                                             <button
@@ -385,7 +385,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                                     <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
                                 </div>
                                 <div className="relative flex justify-center text-sm">
-                                    <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 uppercase tracking-wider text-[10px] font-bold">Or continue with</span>
+                                    <span className="px-2 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-500 uppercase tracking-wider text-[10px] font-bold">Or continue with</span>
                                 </div>
                             </div>
 
@@ -428,7 +428,7 @@ export default function AuthScreen({ initialMode = "login" }: AuthScreenProps) {
                     </div>
                 </div>
 
-                <p className="text-center text-xs text-gray-400 dark:text-gray-500 px-8">
+                <p className="text-center text-xs text-gray-600 dark:text-gray-500 px-8">
                     By continuing, you agree to our <Link href="/terms" className="text-blue-500 hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-blue-500 hover:underline">Privacy Policy</Link>.
                 </p>
             </div>
