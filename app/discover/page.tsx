@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import ProfileSearchCard from "@/components/ProfileSearchCard";
 import { getProfiles } from "@/lib/profiles";
 
+export const revalidate = 0;
+
 export const metadata: Metadata = {
     title: "Discover People | Engine Blog",
     description: "Find and connect with other students and faculty members on Engine Blog.",

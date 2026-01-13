@@ -26,5 +26,19 @@ export default function UsernameCheck() {
         }
     }, [user, isLoaded, pathname, router]);
 
+    // Extra sync to ensure they appear in Discover
+    useEffect(() => {
+        if (isLoaded && user && user.username) {
+            const syncKey = `synced_${user.id}`;
+            if (!sessionStorage.getItem(syncKey)) {
+                fetch("/api/user/sync", { method: "POST" })
+                    .then(() => {
+                        sessionStorage.setItem(syncKey, "true");
+                    })
+                    .catch(console.error);
+            }
+        }
+    }, [user, isLoaded]);
+
     return null;
 }

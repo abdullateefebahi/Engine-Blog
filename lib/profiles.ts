@@ -36,7 +36,7 @@ export async function getProfiles() {
         .from("profiles")
         .select("id, username, full_name, avatar_url, department")
         .order("created_at", { ascending: false })
-        .limit(50);
+        .limit(100);
 
     if (error) {
         console.error("Error fetching profiles:", error);

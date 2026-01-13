@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import PostCard from "@/components/PostCard";
 import Sidebar from "@/components/Sidebar";
 import ProfileSearchCard from "@/components/ProfileSearchCard";
 import SearchInput from "@/components/SearchInput";
 import { useTranslation } from "@/contexts/TranslationContext";
+import { fetchMorePosts } from "@/app/actions/posts";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface HomeClientProps {
     categories: any[];
@@ -20,9 +22,11 @@ interface HomeClientProps {
     searchQuery?: string;
 }
 
+const POSTS_PER_PAGE = 6;
+
 export default function HomeClient({
     categories,
-    posts,
+    posts: initialPosts,
     latestPosts,
     notices,
     trendingPosts,
@@ -32,6 +36,57 @@ export default function HomeClient({
     searchQuery,
 }: HomeClientProps) {
     const { t } = useTranslation();
+    const [posts, setPosts] = useState(initialPosts);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(initialPosts.length >= POSTS_PER_PAGE);
+    const [offset, setOffset] = useState(POSTS_PER_PAGE);
+
+    const observer = useRef<IntersectionObserver | null>(null);
+    const lastPostElementRef = useCallback((node: HTMLDivElement | null) => {
+        if (loading) return;
+        if (observer.current) observer.current.disconnect();
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && hasMore) {
+                loadMore();
+            }
+        });
+        if (node) observer.current.observe(node);
+    }, [loading, hasMore]);
+
+    // Reset when props change (category or search)
+    useEffect(() => {
+        setPosts(initialPosts);
+        setHasMore(initialPosts.length >= POSTS_PER_PAGE);
+        setOffset(POSTS_PER_PAGE);
+    }, [initialPosts]);
+
+    const loadMore = async () => {
+        if (loading || !hasMore) return;
+
+        setLoading(true);
+        try {
+            const newPosts = await fetchMorePosts({
+                start: offset,
+                limit: POSTS_PER_PAGE,
+                category: activeCategory,
+                query: searchQuery
+            });
+
+            if (newPosts.length === 0) {
+                setHasMore(false);
+            } else {
+                setPosts(prevPosts => [...prevPosts, ...newPosts]);
+                setOffset(prevOffset => prevOffset + POSTS_PER_PAGE);
+                if (newPosts.length < POSTS_PER_PAGE) {
+                    setHasMore(false);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching more posts:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
@@ -105,9 +160,34 @@ export default function HomeClient({
                                         {t("Home.articles")}
                                     </h3>
                                 )}
-                                {posts.map((post: any) => (
-                                    <PostCard key={post._id} post={post} />
-                                ))}
+
+                                <AnimatePresence mode="popLayout">
+                                    {posts.map((post: any, index: number) => (
+                                        <motion.div
+                                            key={post._id}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.4, delay: index % POSTS_PER_PAGE * 0.05 }}
+                                        >
+                                            <PostCard post={post} />
+                                        </motion.div>
+                                    ))}
+                                </AnimatePresence>
+
+                                {/* Sensor for infinite scrolling */}
+                                <div ref={lastPostElementRef} className="h-10" />
+
+                                {loading && (
+                                    <div className="flex justify-center py-8">
+                                        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                                    </div>
+                                )}
+
+                                {!hasMore && posts.length > 0 && (
+                                    <div className="text-center py-10 text-gray-500 dark:text-gray-400 font-medium">
+                                        ✨ {t("Home.allCaughtUp") || "You've seen everything!"}
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className="text-center py-20">

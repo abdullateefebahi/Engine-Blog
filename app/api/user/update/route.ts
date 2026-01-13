@@ -2,6 +2,7 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
     const { userId } = await auth();
@@ -49,6 +50,13 @@ export async function POST(req: Request) {
             // Actually, the user specifically asked for this, so let's report it.
             return NextResponse.json({ error: "Clerk updated, but Supabase sync failed: " + supabaseError.message }, { status: 500 });
         }
+
+        const finalUsername = username || updatedUser.username;
+        if (finalUsername) {
+            revalidatePath("/discover");
+            revalidatePath(`/${finalUsername}`);
+        }
+        revalidatePath("/");
 
         return NextResponse.json({ success: true });
     } catch (error: any) {

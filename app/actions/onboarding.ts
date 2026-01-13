@@ -63,6 +63,7 @@ export async function submitOnboardingAction(formData: FormData) {
 
         // Revalidate paths to clear any stale cache
         revalidatePath("/");
+        revalidatePath("/discover");
         revalidatePath(`/${username}`);
 
         return { success: true };

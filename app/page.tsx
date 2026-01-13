@@ -38,14 +38,16 @@ export default async function Home(props: {
   const activeCategory = searchParams.category;
   const searchQuery = searchParams.q;
 
+  const INITIAL_POSTS_LIMIT = 6;
+
   const [categories, posts, latestPosts, notices, trendingPosts, events, profiles] = await Promise.all([
     getAllCategories(),
     searchQuery
-      ? searchPosts(searchQuery)
+      ? searchPosts(searchQuery, 0, INITIAL_POSTS_LIMIT)
       : activeCategory
-        ? getPostsByCategory(activeCategory)
-        : getAllPosts(),
-    getAllPosts(),
+        ? getPostsByCategory(activeCategory, 0, INITIAL_POSTS_LIMIT)
+        : getAllPosts(0, INITIAL_POSTS_LIMIT),
+    getAllPosts(0, 5), // Latest posts for sidebar, can keep it small
     getNotices(),
     getTrendingPosts(),
     getEvents(),

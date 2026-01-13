@@ -46,7 +46,8 @@
         "articles": "Articles",
         "noArticles": "Aucun article trouvé",
         "noResults": "Aucun résultat trouvé",
-        "tryAdjusting": "Essayez d'ajuster votre requête de recherche."
+        "tryAdjusting": "Essayez d'ajuster votre requête de recherche.",
+        "allCaughtUp": "Vous avez tout vu !"
     },
     "Sidebar": {
         "myCollection": "Ma Collection",

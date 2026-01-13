@@ -8,6 +8,8 @@ import PostCard from "@/components/PostCard";
 import PortableTextRenderer from "@/components/PortableTextRenderer";
 import { Metadata } from "next";
 
+import AuthorPostsClient from "@/components/AuthorPostsClient";
+
 export async function generateMetadata(props: {
     params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
@@ -34,7 +36,7 @@ export default async function AuthorPage(props: {
 }) {
     const params = await props.params;
     const author = await getAuthorBySlug(params.slug);
-    const posts = await getPostsByAuthor(params.slug);
+    const initialPosts = await getPostsByAuthor(params.slug, 0, 6);
 
     if (!author) {
         notFound();
@@ -74,13 +76,6 @@ export default async function AuthorPage(props: {
                                     An engineering enthusiast contributing to the UNIBEN Engine Blog.
                                 </p>
                             )}
-
-                            <div className="flex flex-wrap justify-center md:justify-start gap-4">
-                                <div className="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 rounded-xl border border-blue-100 dark:border-blue-800">
-                                    <span className="text-blue-600 dark:text-blue-400 font-bold block text-sm uppercase tracking-wider">Articles</span>
-                                    <span className="text-2xl font-black text-gray-900 dark:text-white">{posts.length}</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -94,12 +89,8 @@ export default async function AuthorPage(props: {
                         </h2>
                     </div>
 
-                    {posts.length > 0 ? (
-                        <div className="flex flex-col gap-8">
-                            {posts.map((post: any) => (
-                                <PostCard key={post._id} post={post} />
-                            ))}
-                        </div>
+                    {initialPosts.length > 0 ? (
+                        <AuthorPostsClient initialPosts={initialPosts} authorSlug={params.slug} />
                     ) : (
                         <div className="text-center py-20 bg-white dark:bg-gray-800/50 rounded-3xl border border-dashed border-gray-200 dark:border-gray-700">
                             <p className="text-gray-500 dark:text-gray-400">No articles published yet.</p>

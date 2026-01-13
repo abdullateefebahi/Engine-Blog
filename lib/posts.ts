@@ -10,9 +10,9 @@ export async function getAllCategories() {
   `);
 }
 
-export async function getAllPosts() {
+export async function getAllPosts(start = 0, end = 10) {
   return client.fetch(`
-    *[_type == "post"] | order(publishedAt desc) {
+    *[_type == "post"] | order(publishedAt desc) [$start...$end] {
       _id,
       title,
       "slug": slug.current,
@@ -26,13 +26,13 @@ export async function getAllPosts() {
       "authorSlug": author->slug.current,
       "authorBio": author->bio
     }
-  `);
+  `, { start, end });
 }
 
-export async function getPostsByCategory(category: string) {
+export async function getPostsByCategory(category: string, start = 0, end = 10) {
   return client.fetch(
     `
-    *[_type == "post" && $category in categories[]->title] | order(publishedAt desc) {
+    *[_type == "post" && $category in categories[]->title] | order(publishedAt desc) [$start...$end] {
       _id,
       title,
       "slug": slug.current,
@@ -47,7 +47,7 @@ export async function getPostsByCategory(category: string) {
       "authorBio": author->bio
     }
   `,
-    { category }
+    { category, start, end }
   );
 }
 export async function getPost(slug: string) {
@@ -72,9 +72,9 @@ export async function getPost(slug: string) {
   );
 }
 
-export async function searchPosts(query: string) {
+export async function searchPosts(query: string, start = 0, end = 10) {
   return client.fetch(
-    `*[_type=="post" && (title match $q || excerpt match $q)]{
+    `*[_type=="post" && (title match $q || excerpt match $q)] | order(publishedAt desc) [$start...$end] {
       _id,
       title,
       "slug": slug.current,
@@ -88,7 +88,7 @@ export async function searchPosts(query: string) {
       "authorSlug": author->slug.current,
       "authorBio": author->bio
     }`,
-    { q: `*${query}*` }
+    { q: `*${query}*`, start, end }
   );
 }
 
@@ -105,9 +105,9 @@ export async function getAuthorBySlug(slug: string) {
   );
 }
 
-export async function getPostsByAuthor(slug: string) {
+export async function getPostsByAuthor(slug: string, start = 0, end = 10) {
   return client.fetch(
-    `*[_type == "post" && author->slug.current == $slug] | order(publishedAt desc) {
+    `*[_type == "post" && author->slug.current == $slug] | order(publishedAt desc) [$start...$end] {
       _id,
       title,
       "slug": slug.current,
@@ -120,7 +120,7 @@ export async function getPostsByAuthor(slug: string) {
       "authorImage": author->image.asset->url,
       "authorSlug": author->slug.current
     }`,
-    { slug }
+    { slug, start, end }
   );
 }
 
