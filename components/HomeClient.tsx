@@ -5,6 +5,7 @@ import Link from "next/link";
 import PostCard from "@/components/PostCard";
 import Sidebar from "@/components/Sidebar";
 import ProfileSearchCard from "@/components/ProfileSearchCard";
+import SearchInput from "@/components/SearchInput";
 import { useTranslation } from "@/contexts/TranslationContext";
 
 interface HomeClientProps {
@@ -45,6 +46,11 @@ export default function HomeClient({
                             {t("Home.subtitle")}
                         </p>
                     </div>
+                </div>
+
+                {/* Mobile Search */}
+                <div className="lg:hidden mb-8">
+                    <SearchInput />
                 </div>
 
                 {/* Categories pills */}

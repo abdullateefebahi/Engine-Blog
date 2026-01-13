@@ -51,7 +51,7 @@ export default function Sidebar({
             </SignedIn>
 
             {/* Search */}
-            <section className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm border border-gray-100 dark:border-gray-700 font-sans">
+            <section className="hidden lg:block bg-white dark:bg-gray-800 rounded-lg p-5 shadow-sm border border-gray-100 dark:border-gray-700 font-sans">
                 <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-3">
                     <FontAwesomeIcon icon={faSearch} className="text-blue-600 w-5" fixedWidth />
                     <span>{t("Sidebar.search")}</span>
